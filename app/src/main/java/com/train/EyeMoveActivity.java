@@ -24,16 +24,16 @@ public class EyeMoveActivity extends AppCompatActivity {
     private MainView mainView;
     private int tableWidth;
     private int tableHeight = 0;
-    private int moveX, moveY;
-    private int moveTop, moveBottom;
+    private double moveX, moveY;
     private Rect rect;
     private RectF rectF;
     private static final int MOVE = 0;
     private boolean isWingOpen = false;
-    private int count = 0;
     private static final int PERIOD = 10;
     private static final int DRAW = 2000 / PERIOD;
+    private static final int ONE_TURN_SENCOND = 2000;
     private static double constant_value;
+    private static final int TOTAL_MOVE = 6;
     final MyHandler handler = new MyHandler(this) {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -69,7 +69,7 @@ public class EyeMoveActivity extends AppCompatActivity {
     }
 
     public void initDrawingVal() {
-        rectF = new RectF(moveX, moveY, 120 + moveX, 90 + moveY);
+        rectF = new RectF((int) moveX, (int) moveY, 120 + (int) moveX, 90 + (int) moveY);
     }
 
     public void initView() {
@@ -81,9 +81,9 @@ public class EyeMoveActivity extends AppCompatActivity {
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
         // 获得屏幕宽和高
-        tableWidth = metrics.widthPixels;
-        tableHeight = metrics.heightPixels - 20;
-        constant_value = (3 * Math.PI) / tableWidth;
+        tableWidth = metrics.widthPixels - 120;
+        tableHeight = metrics.heightPixels - 400;
+        constant_value = (TOTAL_MOVE * Math.PI) / tableWidth;
         rect = new Rect(0, 0, tableWidth, tableHeight);
 
         final Timer timer = new Timer();
@@ -91,33 +91,14 @@ public class EyeMoveActivity extends AppCompatActivity {
         {
             @Override
             public void run() {
-                if (count > 5) {
+                if (moveX >= 0 & moveX < tableWidth) {
+                    moveX += (PERIOD * tableWidth) / (TOTAL_MOVE * ONE_TURN_SENCOND);
+                    moveY = (int) (tableHeight * Math.sin((constant_value * moveX) - (Math.PI / 2)));
+                    moveY = (moveY + tableHeight) / 2;
+                    handler.sendEmptyMessage(MOVE);
+                } else {
                     timer.cancel();
                 }
-                if (moveX >= 0 & moveX < tableWidth) {
-                    moveX += tableWidth / DRAW / 6;
-                } else {
-//                    timer.cancel();
-                }
-                if (moveY >= 0 & moveY < tableHeight) {
-                    if (count % 2 == 0) {
-                        moveTop = tableHeight / DRAW;
-                        moveY += moveTop;
-                    } else {
-                        moveBottom = 0 - tableHeight / DRAW;
-                        moveY += moveBottom;
-                    }
-                } else {
-                    count += 1;
-                    if (count % 2 == 0) {
-                        moveTop = tableHeight / DRAW;
-                        moveY += moveTop;
-                    } else {
-                        moveBottom = 0 - tableHeight / DRAW;
-                        moveY += moveBottom;
-                    }
-                }
-                handler.sendEmptyMessage(MOVE);
             }
         }, 1000, PERIOD);
     }

@@ -1,7 +1,6 @@
-package com.train;
+package com.training;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -15,7 +14,6 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 
-import java.lang.ref.WeakReference;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -30,11 +28,10 @@ public class EyeMoveActivity extends AppCompatActivity {
     private static final int MOVE = 0;
     private boolean isWingOpen = false;
     private static final int PERIOD = 10;
-    private static final int DRAW = 2000 / PERIOD;
     private static final int ONE_TURN_SENCOND = 2000;
     private static double constant_value;
     private static final int TOTAL_MOVE = 6;
-    final MyHandler handler = new MyHandler(this) {
+    final Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == MOVE) {
@@ -44,21 +41,6 @@ public class EyeMoveActivity extends AppCompatActivity {
         }
     };
 
-    private static class MyHandler extends Handler {
-        private WeakReference<EyeMoveActivity> activity;
-
-        public MyHandler(EyeMoveActivity activity) {
-            this.activity = new WeakReference<EyeMoveActivity>(activity);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (activity.get() == null) {
-                return;
-            }
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,17 +93,21 @@ public class EyeMoveActivity extends AppCompatActivity {
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-            Bitmap bitmap1;
+            BitmapDrawable bitmapDrawable;
             if (isWingOpen) {
-                bitmap1 = ((BitmapDrawable) getResources().getDrawable(
-                        R.drawable.ic_open_wing)).getBitmap();
+                bitmapDrawable = ((BitmapDrawable) getResources().getDrawable(
+                        R.drawable.ic_open_wing));
                 isWingOpen = false;
             } else {
-                bitmap1 = ((BitmapDrawable) getResources().getDrawable(
-                        R.drawable.ic_close_wing)).getBitmap();
+                bitmapDrawable = ((BitmapDrawable) getResources().getDrawable(
+                        R.drawable.ic_close_wing));
                 isWingOpen = true;
             }
-            canvas.drawBitmap(bitmap1, rect, rectF, null);
+            if (bitmapDrawable != null) {
+                if (bitmapDrawable.getBitmap() != null) {
+                    canvas.drawBitmap(bitmapDrawable.getBitmap(), rect, rectF, null);
+                }
+            }
         }
     }
 

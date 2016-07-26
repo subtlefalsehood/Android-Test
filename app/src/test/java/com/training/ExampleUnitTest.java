@@ -1,4 +1,4 @@
-package com.train;
+package com.training;
 
 import org.junit.Test;
 

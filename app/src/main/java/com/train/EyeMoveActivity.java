@@ -15,6 +15,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 
+import java.lang.ref.WeakReference;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -32,14 +33,32 @@ public class EyeMoveActivity extends AppCompatActivity {
     private int count = 0;
     private static final int PERIOD = 10;
     private static final int DRAW = 2000 / PERIOD;
-    final Handler handler = new Handler() {
+    private static double constant_value;
+    final MyHandler handler = new MyHandler(this) {
         public void handleMessage(Message msg) {
+            super.handleMessage(msg);
             if (msg.what == MOVE) {
                 initDrawingVal();
                 mainView.invalidate();
             }
         }
     };
+
+    private static class MyHandler extends Handler {
+        private WeakReference<EyeMoveActivity> activity;
+
+        public MyHandler(EyeMoveActivity activity) {
+            this.activity = new WeakReference<EyeMoveActivity>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (activity.get() == null) {
+                return;
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +69,7 @@ public class EyeMoveActivity extends AppCompatActivity {
     }
 
     public void initDrawingVal() {
-        rectF = new RectF(0 + moveX, 0 + moveY, 120 + moveX, 90 + moveY);
+        rectF = new RectF(moveX, moveY, 120 + moveX, 90 + moveY);
     }
 
     public void initView() {
@@ -64,6 +83,7 @@ public class EyeMoveActivity extends AppCompatActivity {
         // 获得屏幕宽和高
         tableWidth = metrics.widthPixels;
         tableHeight = metrics.heightPixels - 20;
+        constant_value = (3 * Math.PI) / tableWidth;
         rect = new Rect(0, 0, tableWidth, tableHeight);
 
         final Timer timer = new Timer();

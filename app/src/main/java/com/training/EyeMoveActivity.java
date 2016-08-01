@@ -1,62 +1,98 @@
 package com.training;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class EyeMoveActivity extends AppCompatActivity {
+public class EyeMoveActivity extends Activity {
 
     private MainView mainView;
     private int tableWidth;
-    private int tableHeight = 0;
+    private int tableHeight;
     private double moveX, moveY;
     private Rect rect;
     private RectF rectF;
     private static final int MOVE = 0;
+    private static final int CHANGE = 1;
     private boolean isWingOpen = false;
-    private static final int PERIOD = 10;
+    private static final int PERIOD = 20;
     private static final int ONE_TURN_SENCOND = 2000;
     private static double constant_value;
     private static final int TOTAL_MOVE = 6;
+    private int count = 0;
+    private boolean need_change = false;
+    private boolean ischanged = false;
     final Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.what == MOVE) {
-                initDrawingVal();
-                mainView.invalidate();
+            switch (msg.what) {
+                case MOVE:
+                    if (count < 6) {
+                        initDrawingVal();
+                        mainView.invalidate();
+                    }
+                    break;
+                case CHANGE:
+                    break;
             }
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 去掉窗口标题
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // 全屏显示
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        mainView = new MainView(this);
+        initdata();
         initView();
         initDrawingVal();
         setContentView(mainView);
     }
 
+//    @Override
+//    public void onConfigurationChanged(Configuration newConfig) {
+//        super.onConfigurationChanged(newConfig);
+//        //切换为竖屏
+//        if (newConfig.orientation == this.getResources().getConfiguration().ORIENTATION_PORTRAIT) {
+//        }
+//        //切换为横屏
+//        else if (newConfig.orientation == this.getResources().getConfiguration().ORIENTATION_LANDSCAPE) {
+//            if (need_change) {
+//                ischanged = true;
+//                initView();
+//                initDrawingVal();
+//
+//            }
+//        }
+//    }
+
     public void initDrawingVal() {
         rectF = new RectF((int) moveX, (int) moveY, 120 + (int) moveX, 90 + (int) moveY);
     }
 
-    public void initView() {
-        mainView = new MainView(this);
-
+    private void initdata() {
         // 获取窗口管理器
         WindowManager windowManager = getWindowManager();
         Display display = windowManager.getDefaultDisplay();
@@ -64,25 +100,53 @@ public class EyeMoveActivity extends AppCompatActivity {
         display.getMetrics(metrics);
         // 获得屏幕宽和高
         tableWidth = metrics.widthPixels - 120;
-        tableHeight = metrics.heightPixels - 400;
+        tableHeight = metrics.heightPixels - 200;
         constant_value = (TOTAL_MOVE * Math.PI) / tableWidth;
         rect = new Rect(0, 0, tableWidth, tableHeight);
+        moveX = 0;
+        moveY = 0;
+    }
 
+    public void initView() {
         final Timer timer = new Timer();
         timer.schedule(new TimerTask() //
-        {
-            @Override
-            public void run() {
-                if (moveX >= 0 & moveX < tableWidth) {
-                    moveX += (PERIOD * tableWidth) / (TOTAL_MOVE * ONE_TURN_SENCOND);
-                    moveY = (int) (tableHeight * Math.sin((constant_value * moveX) - (Math.PI / 2)));
-                    moveY = (moveY + tableHeight) / 2;
-                    handler.sendEmptyMessage(MOVE);
-                } else {
-                    timer.cancel();
-                }
-            }
-        }, 1000, PERIOD);
+                       {
+                           @Override
+                           public void run() {
+
+                               if (moveX >= 0 & moveX < tableWidth) {
+                                   if (count < 3 & count % 2 == 0) {
+                                       moveX += (PERIOD * tableWidth) / (TOTAL_MOVE * ONE_TURN_SENCOND);
+                                   } else if (count < 3 & count % 2 != 0) {
+                                       moveX -= (PERIOD * tableWidth) / (TOTAL_MOVE * ONE_TURN_SENCOND);
+                                   }
+                                   moveY = (int) (tableHeight * Math.sin((constant_value * moveX) - (Math.PI / 2)));
+                                   moveY = (moveY + tableHeight) / 2;
+                               } else {
+                                   count++;
+                                   if (count == 3) {
+                                       handler.sendEmptyMessage(CHANGE);
+                                   }
+                                   if (count >= 6) {
+                                       timer.cancel();
+                                       return;
+                                   }
+                                   if (count >= 3) {
+                                       Looper.prepare();
+                                       Toast.makeText(EyeMoveActivity.this, "请切换到横屏", Toast.LENGTH_LONG).show();
+                                       Looper.loop();
+                                   }
+                                   if (count < 3 & count % 2 == 0) {
+                                       moveX += (PERIOD * tableWidth) / (TOTAL_MOVE * ONE_TURN_SENCOND);
+                                   } else if (count < 3 & count % 2 != 0) {
+                                       moveX -= (PERIOD * tableWidth) / (TOTAL_MOVE * ONE_TURN_SENCOND);
+                                   }
+                               }
+                               handler.sendEmptyMessage(MOVE);
+                           }
+                       }
+
+                , 1000, PERIOD);
     }
 
     private class MainView extends View {
@@ -97,19 +161,35 @@ public class EyeMoveActivity extends AppCompatActivity {
             if (isWingOpen) {
                 bitmapDrawable = ((BitmapDrawable) getResources().getDrawable(
                         R.drawable.ic_open_wing));
+                if (ischanged) {
+                }
+
                 isWingOpen = false;
             } else {
                 bitmapDrawable = ((BitmapDrawable) getResources().getDrawable(
                         R.drawable.ic_close_wing));
+                if (ischanged) {
+                }
                 isWingOpen = true;
             }
             if (bitmapDrawable != null) {
                 if (bitmapDrawable.getBitmap() != null) {
-                    canvas.drawBitmap(bitmapDrawable.getBitmap(), rect, rectF, null);
+                    Bitmap dstbmp = rotateBitmap(bitmapDrawable.getBitmap(), 90);
+                    canvas.drawBitmap(dstbmp, rect, rectF, null);
                 }
             }
         }
     }
 
+    private Bitmap rotateBitmap(Bitmap bitmap, float degrees) {
 
+        // 定义矩阵对象
+        Matrix matrix = new Matrix();
+        // 缩放原图
+        matrix.postScale(1f, 1f);
+        // 向左旋转degrees度，参数为正则向右旋转
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+                bitmap.getHeight(), matrix, true);
+    }
 }

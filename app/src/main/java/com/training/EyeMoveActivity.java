@@ -37,9 +37,13 @@ public class EyeMoveActivity extends Activity {
     private static final int ONE_TURN_SENCOND = 2000;
     private static double constant_value;
     private static final int TOTAL_MOVE = 6;
+    int bitmapW = 120;
+    int bitmapH = 90;
     private int count = 0;
     private boolean need_change = false;
     private boolean ischanged = false;
+    private int[] ic_wings = {R.drawable.ic_wing_1, R.drawable.ic_wing_1, R.drawable.ic_wing_2, R.drawable.ic_wing_2, R.drawable.ic_wing_3, R.drawable.ic_wing_3, R.drawable.ic_wing_4, R.drawable.ic_wing_4};
+    private int n = 0;
     final Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -51,6 +55,12 @@ public class EyeMoveActivity extends Activity {
                     }
                     break;
                 case CHANGE:
+                    int t = bitmapH;
+                    bitmapH = bitmapW;
+                    bitmapW = t;
+                    initdata();
+                    initView();
+                    initDrawingVal();
                     break;
             }
         }
@@ -88,8 +98,9 @@ public class EyeMoveActivity extends Activity {
 //        }
 //    }
 
+
     public void initDrawingVal() {
-        rectF = new RectF((int) moveX, (int) moveY, 120 + (int) moveX, 90 + (int) moveY);
+        rectF = new RectF((int) moveX, (int) moveY, bitmapW + (int) moveX, bitmapH + (int) moveY);
     }
 
     private void initdata() {
@@ -99,12 +110,15 @@ public class EyeMoveActivity extends Activity {
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
         // 获得屏幕宽和高
-        tableWidth = metrics.widthPixels - 120;
-        tableHeight = metrics.heightPixels - 200;
+
+
+        tableWidth = metrics.widthPixels - 100;
+        tableHeight = metrics.heightPixels - 100;
         constant_value = (TOTAL_MOVE * Math.PI) / tableWidth;
         rect = new Rect(0, 0, tableWidth, tableHeight);
         moveX = 0;
         moveY = 0;
+        count = 0;
     }
 
     public void initView() {
@@ -124,17 +138,17 @@ public class EyeMoveActivity extends Activity {
                                    moveY = (moveY + tableHeight) / 2;
                                } else {
                                    count++;
-                                   if (count == 3) {
+                                   if (count >= 6 & !ischanged) {
+                                       Looper.prepare();
+                                       Toast.makeText(EyeMoveActivity.this, "请切换到横屏", Toast.LENGTH_LONG).show();
                                        handler.sendEmptyMessage(CHANGE);
-                                   }
-                                   if (count >= 6) {
+                                       ischanged = true;
+                                       Looper.loop();
                                        timer.cancel();
                                        return;
                                    }
-                                   if (count >= 3) {
-                                       Looper.prepare();
-                                       Toast.makeText(EyeMoveActivity.this, "请切换到横屏", Toast.LENGTH_LONG).show();
-                                       Looper.loop();
+                                   if (count >= 3 & !ischanged) {
+
                                    }
                                    if (count < 3 & count % 2 == 0) {
                                        moveX += (PERIOD * tableWidth) / (TOTAL_MOVE * ONE_TURN_SENCOND);
@@ -160,24 +174,21 @@ public class EyeMoveActivity extends Activity {
             BitmapDrawable bitmapDrawable;
             if (isWingOpen) {
                 bitmapDrawable = ((BitmapDrawable) getResources().getDrawable(
-                        R.drawable.ic_open_wing));
-                if (ischanged) {
-                }
-
-                isWingOpen = false;
+                        ic_wings[n]));
             } else {
                 bitmapDrawable = ((BitmapDrawable) getResources().getDrawable(
-                        R.drawable.ic_close_wing));
-                if (ischanged) {
-                }
-                isWingOpen = true;
+                        ic_wings[n]));
             }
-            if (bitmapDrawable != null) {
+            n++;
+            n = n % 8;
+            if (ischanged & bitmapDrawable != null) {
                 if (bitmapDrawable.getBitmap() != null) {
                     Bitmap dstbmp = rotateBitmap(bitmapDrawable.getBitmap(), 90);
                     canvas.drawBitmap(dstbmp, rect, rectF, null);
+                    return;
                 }
             }
+            canvas.drawBitmap(bitmapDrawable.getBitmap(), rect, rectF, null);
         }
     }
 

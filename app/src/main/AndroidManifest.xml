@@ -8,9 +8,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"></uses-permission>
+        <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+
         <activity
-            android:name="com.training.EyeMoveActivity"
+            android:name=".activity.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -19,6 +20,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.Main2Activity" />
+
+        <service
+            android:name=".sevice.MyService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

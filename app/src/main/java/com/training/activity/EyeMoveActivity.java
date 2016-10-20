@@ -1,4 +1,4 @@
-package com.training;
+package com.training.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import com.training.R;
 
 import java.util.Timer;
 import java.util.TimerTask;

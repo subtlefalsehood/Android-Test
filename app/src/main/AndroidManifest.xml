@@ -11,7 +11,7 @@
         <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
 
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.ServiceTestActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -23,7 +23,7 @@
         <activity android:name=".activity.Main2Activity" />
 
         <service
-            android:name=".sevice.MyService"
+            android:name=".service.MyService"
             android:enabled="true"
             android:exported="true"></service>
     </application>

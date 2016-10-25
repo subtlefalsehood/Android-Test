@@ -60,7 +60,7 @@ public class ServiceTestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_service_test);
         init();
         ButterKnife.bind(this);
     }

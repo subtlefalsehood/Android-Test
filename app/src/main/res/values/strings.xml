@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Train</string>
+    <string name="service">service</string>
+    <string name="data">data</string>
+    <string name="preference">preference</string>
+    <string name="content">content</string>
+    <string name="database">database</string>
+    <string name="file">file</string>
 </resources>

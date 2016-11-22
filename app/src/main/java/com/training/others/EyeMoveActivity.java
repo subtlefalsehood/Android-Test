@@ -1,4 +1,4 @@
-package com.training.activity;
+package com.training.others;
 
 import android.app.Activity;
 import android.content.Context;

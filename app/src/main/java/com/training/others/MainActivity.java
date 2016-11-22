@@ -1,19 +1,24 @@
-package com.training.activity;
+package com.training.others;
 
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 
-import com.training.MyActivity;
 import com.training.R;
-import com.training.utils.ContextUtils;
+import com.training.service.activity.ServiceTestActivity;
+import com.training.storage.DataTestActivity;
+import com.training.common.utlis.ContextUtils;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public class DataBaseTestActivity extends MyActivity implements View.OnClickListener {
-    @BindView(R.id.layout_common)
+public class MainActivity extends AppCompatActivity implements OnClickListener {
+    @BindView(R.id.activity_main)
     LinearLayout layout;
     Button[] buttons;
     private int[][] ids = {{R.id.btn_service, R.string.service},
@@ -22,7 +27,8 @@ public class DataBaseTestActivity extends MyActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_common);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         setupView();
     }
 
@@ -33,7 +39,7 @@ public class DataBaseTestActivity extends MyActivity implements View.OnClickList
             buttons[i].setId(ids[i][0]);
             buttons[i].setText(ids[i][1]);
             buttons[i].setGravity(Gravity.CENTER);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, 0, 1);
+            LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, 0, 1);
             layout.addView(buttons[i], params);
             ContextUtils.setClick(this, buttons[i]);
         }
@@ -43,10 +49,10 @@ public class DataBaseTestActivity extends MyActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_service:
-                ContextUtils.jumpActivity(mContext, ServiceTestActivity.class, false);
+                ContextUtils.jumpActivity(this, ServiceTestActivity.class, false);
                 break;
             case R.id.btn_data:
-                ContextUtils.jumpActivity(mContext, DataTestActivity.class, false);
+                ContextUtils.jumpActivity(this, DataTestActivity.class, false);
                 break;
 
         }

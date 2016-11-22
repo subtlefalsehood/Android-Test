@@ -1,4 +1,4 @@
-package com.training.utils;
+package com.training.common.utlis;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -8,16 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.IdRes;
 import android.view.View;
+import android.widget.Toast;
 
 /**
  * Created by chenqiuyi on 16/10/25.
  */
 
 public class ContextUtils {
-    public interface SetupView {
-        void setupView();
-    }
-
     public static void jumpFragment(FragmentManager fragmentManager, @IdRes int resId, Fragment fragment) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(resId, fragment);
@@ -27,7 +24,7 @@ public class ContextUtils {
 
     public static void jumpFragment(FragmentManager fragmentManager, Fragment fragment) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(fragment,"123");
+        transaction.add(fragment, "123");
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -47,5 +44,9 @@ public class ContextUtils {
         for (View view : views) {
             view.setOnClickListener(listener);
         }
+    }
+
+    public static void showToast(Context context, String content) {
+        Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
     }
 }

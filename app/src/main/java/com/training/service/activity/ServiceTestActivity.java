@@ -1,4 +1,4 @@
-package com.training.activity;
+package com.training.service.activity;
 
 import android.app.Service;
 import android.content.ComponentName;

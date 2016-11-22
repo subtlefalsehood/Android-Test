@@ -4,4 +4,14 @@
     <string name="data">数据</string>
     <string name="database">数据库</string>
     <string name="file">文件</string>
+    <string name="start">开始</string>
+    <string name="stop">结束</string>
+    <string name="unbind">解绑</string>
+    <string name="normal_bind">常规绑定</string>
+    <string name="aidl_bind">AIDL绑定</string>
+    <string name="search">查询</string>
+    <string name="insert">插入</string>
+    <string name="delete">删除</string>
+    <string name="read">读</string>
+    <string name="write">写</string>
 </resources>

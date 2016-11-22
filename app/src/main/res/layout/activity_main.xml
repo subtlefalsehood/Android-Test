@@ -11,5 +11,5 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:weightSum="8"
-    tools:context="com.training.activity.MainActivity">
+    tools:context="com.training.others.MainActivity">
 </LinearLayout>

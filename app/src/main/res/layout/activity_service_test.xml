@@ -10,40 +10,40 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:weightSum="8"
-    tools:context="com.training.activity.ServiceTestActivity">
+    tools:context="com.training.service.activity.ServiceTestActivity">
 
     <Button
         android:id="@+id/btn_start"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:text="start" />
+        android:text="@string/start" />
 
     <Button
         android:id="@+id/btn_stop"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:text="stop" />
+        android:text="@string/stop" />
 
     <Button
         android:id="@+id/btn_bind1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:text="AIDLBind" />
+        android:text="@string/aidl_bind" />
 
     <Button
         android:id="@+id/btn_bind2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:text="NormalBind" />
+        android:text="@string/normal_bind" />
 
     <Button
         android:id="@+id/btn_unbind"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:text="unbind" />
+        android:text="@string/unbind" />
 </LinearLayout>

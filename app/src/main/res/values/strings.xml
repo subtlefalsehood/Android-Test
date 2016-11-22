@@ -6,4 +6,14 @@
     <string name="content">content</string>
     <string name="database">database</string>
     <string name="file">file</string>
+    <string name="start">start</string>
+    <string name="stop">stop</string>
+    <string name="normal_bind">NORMAL-BIND</string>
+    <string name="aidl_bind">AIDL-BIND</string>
+    <string name="unbind">unbind</string>
+    <string name="search">search</string>
+    <string name="delete">delete</string>
+    <string name="insert">insert</string>
+    <string name="read">read</string>
+    <string name="write">write</string>
 </resources>

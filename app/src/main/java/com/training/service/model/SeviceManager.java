@@ -1,4 +1,4 @@
-package com.training.model;
+package com.training.service.model;
 
 import android.content.ComponentName;
 import android.content.ServiceConnection;

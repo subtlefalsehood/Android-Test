@@ -11,7 +11,7 @@ import android.widget.LinearLayout.LayoutParams;
 
 import com.training.R;
 import com.training.service.activity.ServiceTestActivity;
-import com.training.storage.DataTestActivity;
+import com.training.storage.activity.DataTestActivity;
 import com.training.common.utlis.ContextUtils;
 
 import butterknife.BindView;

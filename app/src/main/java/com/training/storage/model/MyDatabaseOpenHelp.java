@@ -1,4 +1,4 @@
-package com.training.storage.dao;
+package com.training.storage.model;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

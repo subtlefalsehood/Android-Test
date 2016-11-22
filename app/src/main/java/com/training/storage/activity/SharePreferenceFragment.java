@@ -1,4 +1,4 @@
-package com.training.storage;
+package com.training.storage.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
  * Created by chenqiuyi on 16/10/25.
  */
 
-public class ContentFragment extends android.support.v4.app.Fragment implements View.OnClickListener {
+public class SharePreferenceFragment extends android.support.v4.app.Fragment implements View.OnClickListener {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

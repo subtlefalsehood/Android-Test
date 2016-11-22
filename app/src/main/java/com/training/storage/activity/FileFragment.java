@@ -1,4 +1,4 @@
-package com.training.storage;
+package com.training.storage.activity;
 
 import android.os.Bundle;
 import android.os.Environment;
@@ -81,7 +81,7 @@ public class FileFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-            FileOutputStream fileOutputStream = null;
+            FileOutputStream fileOutputStream;
             try {
                 fileOutputStream = new FileOutputStream(file, true);
                 fileOutputStream.write(text.getBytes());

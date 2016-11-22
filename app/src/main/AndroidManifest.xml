@@ -27,7 +27,7 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".storage.DataTestActivity" />
+        <activity android:name=".storage.activity.DataTestActivity" />
     </application>
 
 </manifest>

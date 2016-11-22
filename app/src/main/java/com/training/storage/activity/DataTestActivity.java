@@ -1,4 +1,4 @@
-package com.training.storage;
+package com.training.storage.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

@@ -1,4 +1,4 @@
-package com.training.storage;
+package com.training.storage.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 
 import com.training.R;
 import com.training.common.utlis.ContextUtils;
-import com.training.storage.dao.MyDatabaseOpenHelp;
+import com.training.storage.model.MyDatabaseOpenHelp;
 import com.training.storage.model.SQLiteInfo;
 import com.training.storage.utils.SQLUtils;
 import com.training.storage.view.SQLiteSelectDialog;

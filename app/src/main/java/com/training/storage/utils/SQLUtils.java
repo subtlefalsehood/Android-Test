@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
-import com.training.storage.dao.MyDatabaseOpenHelp;
+import com.training.storage.model.MyDatabaseOpenHelp;
 import com.training.storage.model.SQLiteInfo;
 
 import java.util.List;

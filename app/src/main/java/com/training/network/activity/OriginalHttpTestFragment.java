@@ -63,7 +63,7 @@ public class OriginalHttpTestFragment extends Fragment {
         return layout;
     }
 
-    @OnClick(R.id.brn_get)
+    @OnClick(R.id.btn_get)
     void clickGet() {
         RqItem rqItem = new RqItem();
 //        MyAsyncTask myAsyncTask = new MyAsyncTask(GET, Constant.HTTP_URL + rqItem.getCmd() + "?" + "mac=" + rqItem.getMac());

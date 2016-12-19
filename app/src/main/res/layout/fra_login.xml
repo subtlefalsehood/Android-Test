@@ -33,7 +33,7 @@
         android:padding="10dp" />
 
     <Button
-        android:id="@+id/brn_get"
+        android:id="@+id/btn_get"
         style="@style/MyBtnStyle"
         android:text="GET请求" />
 </LinearLayout>

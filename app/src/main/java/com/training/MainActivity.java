@@ -1,4 +1,4 @@
-package com.training.others;
+package com.training;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,10 +9,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
-import com.training.R;
+import com.training.common.utlis.ContextUtils;
+import com.training.network.activity.NetWorkTestActivity;
 import com.training.service.activity.ServiceTestActivity;
 import com.training.storage.activity.DataTestActivity;
-import com.training.common.utlis.ContextUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     LinearLayout layout;
     Button[] buttons;
     private int[][] ids = {{R.id.btn_service, R.string.service},
-            {R.id.btn_data, R.string.data}};
+            {R.id.btn_data, R.string.data,},{R.id.btn_network, R.string.network}};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             case R.id.btn_data:
                 ContextUtils.jumpActivity(this, DataTestActivity.class, false);
                 break;
+            case R.id.btn_network:
+                ContextUtils.jumpActivity(this, NetWorkTestActivity.class, false);
 
         }
     }

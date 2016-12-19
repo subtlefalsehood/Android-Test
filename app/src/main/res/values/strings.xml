@@ -16,4 +16,11 @@
     <string name="insert">insert</string>
     <string name="read">read</string>
     <string name="write">write</string>
+    <string name="network">network</string>
+    <string name="volley">Volley</string>
+    <string name="retrofit">retrofit</string>
+    <string name="original">Original</string>
+    <string name="login">login</string>
+    <string name="input_password">please input password</string>
+    <string name="input_username">please input username</string>
 </resources>

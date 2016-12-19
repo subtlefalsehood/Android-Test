@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<recipes>
+    <recipe key="nv1kxq2trglmvma0">
+        <name>看不清黑板</name>
+        <img>ic_close_wing</img>
+    </recipe>
+    <recipe key="cjs0jfjbzauca3bc">
+        <name>看屏幕眼睛累</name>
+        <img>ic_close_wing</img>
+    </recipe>
+
+    <!--<recipe key="nv1kxq2trglmvma0">-->
+        <!--<name>眼睛有血丝</name>-->
+        <!--<img>res/drawable/ic_close_wing.png</img>-->
+    <!--</recipe>-->
+
+    <!--<recipe key="nv1kxq2trglmvma0">-->
+        <!--<name>调整坐姿</name>-->
+        <!--<img>res/drawable/ic_close_wing.png</img>-->
+    <!--</recipe>-->
+</recipes>

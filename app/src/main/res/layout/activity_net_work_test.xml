@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+    android:id="@+id/activity_net_work_test"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -10,6 +10,21 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:weightSum="9"
-    tools:context="com.training.MainActivity">
+    tools:context="com.training.network.activity.NetWorkTestActivity">
+
+    <Button
+        android:id="@+id/btn_volley"
+        style="@style/MyBtnStyle"
+        android:text="@string/volley" />
+
+    <Button
+        android:id="@+id/btn_retrofit"
+        style="@style/MyBtnStyle"
+        android:text="@string/retrofit" />
+
+    <Button
+        android:id="@+id/btn_original"
+        style="@style/MyBtnStyle"
+        android:text="@string/original" />
+
 </LinearLayout>

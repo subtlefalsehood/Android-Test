@@ -19,4 +19,23 @@
         <item name="android:backgroundDimAmount">0.6</item>
     </style>
 
+    <style name="MyBtnStyle" parent="Base.Widget.AppCompat.Button">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_width">120dp</item>
+        <item name="background">@drawable/btn_selector</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="MyEditTextStyle" parent="Base.Widget.AppCompat.EditText">
+        <item name="background">@drawable/et_selector</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">200dp</item>
+        <item name="android:gravity">center_vertical|bottom</item>
+    </style>
 </resources>

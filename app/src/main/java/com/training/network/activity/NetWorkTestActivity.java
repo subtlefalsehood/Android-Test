@@ -1,7 +1,6 @@
-package com.training.storage.activity;
+package com.training.network.activity;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -16,36 +15,34 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DataTestActivity extends AppCompatActivity {
+public class NetWorkTestActivity extends AppCompatActivity {
     @BindView(R.id.pager)
     ViewPager pager;
     @BindView(R.id.tab)
     TabLayout tab;
+
     private List<String> titles = new ArrayList<>();
     private List<Fragment> fragments = new ArrayList<>();
-    private MyFragmentPagerAdapt adapt;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
         ButterKnife.bind(this);
-        setupView();
-    }
 
-    private void setupView() {
-        titles.add(getString(R.string.database));
-//        titles.add(getString(R.string.content));
-//        titles.add(getString(R.string.preference));
-        titles.add(getString(R.string.file));
+//        titles.add(getString(R.string.volley));
+//        titles.add(getString(R.string.retrofit));
+        titles.add(getString(R.string.original));
 
-        fragments.add(new SQLiteFragment());
-//        fragments.add(new ContentFragment());
-//        fragments.add(new SharePreferenceFragment());
-        fragments.add(new FileFragment());
+//        fragments.add(new VolleyTestFragment());
+//        fragments.add(new RetrofitTestFragment());
+        fragments.add(new OriginalHttpTestFragment());
 
-        adapt = new MyFragmentPagerAdapt(getSupportFragmentManager(), titles, fragments);
+        MyFragmentPagerAdapt adapt =
+                new MyFragmentPagerAdapt(getSupportFragmentManager(),
+                        titles, fragments);
         pager.setAdapter(adapt);
         tab.setupWithViewPager(pager);
     }
+
 }

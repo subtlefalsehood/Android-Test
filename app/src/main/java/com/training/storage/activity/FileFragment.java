@@ -1,5 +1,6 @@
 package com.training.storage.activity;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -13,10 +14,16 @@ import android.widget.TextView;
 import com.training.R;
 import com.training.common.utlis.ContextUtils;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +38,8 @@ public class FileFragment extends Fragment {
     EditText et_file;
     @BindView(R.id.tv_file)
     TextView tv_file;
+//    @BindView(R.id.img_test)
+//    ImageView img;
 
     @Nullable
     @Override
@@ -45,6 +54,18 @@ public class FileFragment extends Fragment {
         switch (v.getId()) {
             case R.id.btn_read:
                 tv_file.setText(read());
+
+//                Map<String, RecipeInfo> recipeInfos = getInfo();
+//                tv_file.setText("");
+//                for (String key : recipeInfos.keySet()) {
+//                    tv_file.append(
+//                            "\nkey = " + key +
+//                                    "\nname = " + recipeInfos.get(key).getName()
+//                                    + "\nimg = " + recipeInfos.get(key).getBitmapPath());
+//                    img.setImageResource(
+//                            getResources().getIdentifier(recipeInfos.get(key).getBitmapPath(),
+//                                    "drawable",getActivity().getApplicationInfo().packageName));
+//                }
                 break;
             case R.id.btn_write:
                 write(et_file.getText().toString());
@@ -124,5 +145,71 @@ public class FileFragment extends Fragment {
     private boolean isExternalStorageAvailable() {
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
 
+    }
+
+    private Map<String, RecipeInfo> getInfo() {
+        Map<String, RecipeInfo> recipeInfos = new HashMap<>();
+        RecipeInfo recipeInfo = new RecipeInfo();
+        String key = "";
+        try {
+            InputStream inputStream = getResources().getAssets().open("myXml");
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            XmlPullParser parser = factory.newPullParser();
+            parser.setInput(inputStream, "utf-8");
+            int eventType = parser.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
+                    case XmlPullParser.START_TAG:
+                        if (parser.getName().equals("recipe")) {
+                            recipeInfo = new RecipeInfo();
+                            key = parser.getAttributeValue(0);
+                        } else if (parser.getName().equals("name")) {
+                            recipeInfo.setName(parser.nextText());
+                        } else if (parser.getName().equals("img")) {
+                            recipeInfo.setBitmapPath(parser.nextText());
+                        }
+                        break;
+                    case XmlPullParser.END_TAG:
+                        if (!key.isEmpty()) {
+                            recipeInfos.put(key, recipeInfo);
+                        }
+                        break;
+                }
+                eventType = parser.next();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return recipeInfos;
+    }
+
+    public class RecipeInfo {
+        private String bitmapPath;
+        private Bitmap bitmap;
+        private String name;
+
+        public Bitmap getBitmap() {
+            return bitmap;
+        }
+
+        public void setBitmap(Bitmap bitmap) {
+            this.bitmap = bitmap;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getBitmapPath() {
+            return bitmapPath;
+        }
+
+        public void setBitmapPath(String bitmapPath) {
+            this.bitmapPath = bitmapPath;
+        }
     }
 }

@@ -7,16 +7,10 @@ public class RqLogin extends RequestObject {
 
     private String password;
 
-    public RqLogin(String cmd) {
-        super(Constant.HTTP_URL + cmd);
-    }
+    private String openId;
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public RqLogin() {
+        super(Constant.LOGIN_URL);
     }
 
     public String getPhoneNum() {
@@ -27,4 +21,19 @@ public class RqLogin extends RequestObject {
         this.phoneNum = phoneNum;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
 }

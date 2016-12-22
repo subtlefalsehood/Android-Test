@@ -3,4 +3,5 @@
     <item name="btn_data" type="id" />
     <item name="btn_service" type="id" />
     <item name="btn_network" type="id" />
+    <item name="btn_douban" type="id" />
 </resources>

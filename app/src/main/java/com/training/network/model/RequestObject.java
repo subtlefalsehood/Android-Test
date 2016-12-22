@@ -1,16 +1,29 @@
 package com.training.network.model;
 
+import com.training.common.utlis.StringUtil;
+import com.training.network.Constant;
+
 import java.io.Serializable;
 
-/**
- * Created by chenqiuyi on 16/12/8.
- */
-
-public class RequestObject implements Serializable {
-    private String mac = "eye-android";
+public class RequestObject implements Serializable{
     private String cmd;
+    private String mac;
+    private String at;
 
     public RequestObject(String cmd) {
+        this.cmd = cmd;
+        if(!StringUtil.isBlank(Constant.DEVICE_ID)){
+            this.mac = Constant.DEVICE_ID;
+        }else {
+            this.mac = "criwell-unget-device-id";
+        }
+    }
+
+    public String getCmd() {
+        return cmd;
+    }
+
+    public void setCmd(String cmd) {
         this.cmd = cmd;
     }
 
@@ -22,11 +35,19 @@ public class RequestObject implements Serializable {
         this.mac = mac;
     }
 
-    public String getCmd() {
-        return cmd;
+    public String getAt() {
+        return at;
     }
 
-    public void setCmd(String cmd) {
-        this.cmd = cmd;
+    public void setAt(String at) {
+        this.at = at;
+    }
+
+    public String getId() {
+        return at;
+    }
+
+    public void setId(String id) {
+        this.at = id;
     }
 }

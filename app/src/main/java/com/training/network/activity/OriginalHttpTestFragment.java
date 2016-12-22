@@ -103,7 +103,6 @@ public class OriginalHttpTestFragment extends Fragment {
     RqLogin rqLogin;
 
     private void login(String username, String password) {
-        rqLogin = new RqLogin(Constant.LOGIN_URL);
         rqLogin.setPhoneNum(username);
         rqLogin.setPassword(password);
         MyAsyncTask myAsyncTask = new MyAsyncTask(POST, Constant.HTTP_URL + Constant.LOGIN_URL);

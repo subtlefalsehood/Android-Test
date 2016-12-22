@@ -7,6 +7,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.IdRes;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.Toast;
 
@@ -48,5 +49,9 @@ public class ContextUtils {
 
     public static void showToast(Context context, String content) {
         Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void showSnack(View layout,String content) {
+        Snackbar.make(layout, content, Snackbar.LENGTH_LONG).show();
     }
 }

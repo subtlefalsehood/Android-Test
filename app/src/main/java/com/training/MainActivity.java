@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
 import com.training.common.utlis.ContextUtils;
+import com.training.network.activity.DouBanTestActivity;
 import com.training.network.activity.NetWorkTestActivity;
 import com.training.service.activity.ServiceTestActivity;
 import com.training.storage.activity.DataTestActivity;
@@ -22,7 +23,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     LinearLayout layout;
     Button[] buttons;
     private int[][] ids = {{R.id.btn_service, R.string.service},
-            {R.id.btn_data, R.string.data,},{R.id.btn_network, R.string.network}};
+            {R.id.btn_data, R.string.data,},{R.id.btn_network, R.string.network}
+            ,{R.id.btn_douban, R.string.douban}};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 break;
             case R.id.btn_network:
                 ContextUtils.jumpActivity(this, NetWorkTestActivity.class, false);
+            case R.id.btn_douban:
+                ContextUtils.jumpActivity(this, DouBanTestActivity.class, false);
 
         }
     }

@@ -1,5 +1,6 @@
 package com.training.network.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -79,16 +81,36 @@ public class DouBanTestActivity extends AppCompatActivity {
             View view = LayoutInflater
                     .from(DouBanTestActivity.this)
                     .inflate(R.layout.activity_douban_item, parent, false);
-            DBHolder holder = new DBHolder(view);
+            final DBHolder holder = new DBHolder(view);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(DouBanTestActivity.this, WebActivity.class);
+                    intent.putExtra("url", rpList.get(holder.getAdapterPosition()).getAlt());
+                    startActivity(intent);
+                }
+            });
             return holder;
         }
 
         @Override
         public void onBindViewHolder(DBHolder holder, int position) {
-            holder.textView.setText(rpList.get(position).getTitle());
+            Subject subject = rpList.get(position);
+            holder.textView.setText(subject.getTitle());
             Picasso.with(DouBanTestActivity.this)
-                    .load(rpList.get(position).getImages().getLarge())
+                    .load(subject.getImages().getLarge())
                     .into(holder.imageView);
+            holder.origin_title.setText(subject.getOriginal_title());
+            holder.year.setText(subject.getYear());
+            holder.rb.setRating((float) (subject.getRating().getAverage() / 2));
+
+            StringBuffer buffer = new StringBuffer("");
+            for (String genre : subject.getGenres()) {
+                buffer.append(genre);
+                buffer.append(",");
+            }
+            buffer.deleteCharAt(buffer.length() - 1);
+            holder.genre.setText(buffer.toString());
         }
 
         @Override
@@ -97,13 +119,23 @@ public class DouBanTestActivity extends AppCompatActivity {
         }
 
         class DBHolder extends RecyclerView.ViewHolder {
+            View itemView;
             TextView textView;
             ImageView imageView;
+            TextView origin_title;
+            TextView genre;
+            TextView year;
+            RatingBar rb;
 
             DBHolder(View itemView) {
                 super(itemView);
-                textView = (TextView) itemView.findViewById(R.id.tv_title);
+                this.itemView = itemView;
                 imageView = (ImageView) itemView.findViewById(R.id.img_movie);
+                textView = (TextView) itemView.findViewById(R.id.tv_title);
+                origin_title = (TextView) itemView.findViewById(R.id.tv_origin_title);
+                genre = (TextView) itemView.findViewById(R.id.tv_genre);
+                year = (TextView) itemView.findViewById(R.id.tv_year);
+                rb = (RatingBar) itemView.findViewById(R.id.rb);
             }
         }
     }

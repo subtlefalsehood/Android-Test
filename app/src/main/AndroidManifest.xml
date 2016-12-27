@@ -34,7 +34,8 @@
 
         <activity android:name=".storage.activity.DataTestActivity" />
         <activity android:name=".network.activity.NetWorkTestActivity" />
-        <activity android:name=".network.activity.DouBanTestActivity"></activity>
+        <activity android:name=".network.activity.DouBanTestActivity" />
+        <activity android:name=".network.activity.WebActivity"></activity>
     </application>
 
 </manifest>

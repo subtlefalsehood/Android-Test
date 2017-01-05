@@ -1,4 +1,4 @@
-package com.training.network.activity;
+package com.training.douban;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.training.R;
 import com.training.common.utlis.ContextUtils;
+import com.training.network.Constant;
+import com.training.network.activity.WebActivity;
 import com.training.network.model.EndlessRecyclerOnScrollListener;
 import com.training.network.model.RpDBM250;
 import com.training.network.model.RpDBM250.Subject;
@@ -30,9 +32,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 
 public class DouBanTestActivity extends AppCompatActivity {
@@ -57,7 +66,7 @@ public class DouBanTestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dou_ban_test);
+        setContentView(R.layout.activity_douban_test);
         ButterKnife.bind(this);
 //        StaggeredGridLayoutManager staggeredGridLayoutManager =
 //                new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
@@ -71,7 +80,8 @@ public class DouBanTestActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_start)
     void start() {
-        getDouBanMovieList(0, 10);
+        test1();
+//        getDouBanMovieList(0, 10);
     }
 
     private class DouBanAdapter extends RecyclerView.Adapter<DouBanAdapter.DBHolder> {
@@ -162,6 +172,7 @@ public class DouBanTestActivity extends AppCompatActivity {
                             swipeLayout.setRefreshing(false);
                         }
                     }
+                    test(rpDBM250);
                 }
             }
 
@@ -171,6 +182,52 @@ public class DouBanTestActivity extends AppCompatActivity {
             }
         });
     }
+
+    //test rx+retrofit
+    private interface DouBanMovieServiceTest {
+        @GET(Constant.DOUBAN_MOVIE_TOP250)
+        Observable<RpDBM250> getMovie(@Query("start") int start, @Query("count") int count);
+    }
+
+    private void test1() {
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constant.DOUBAN_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+        final DouBanMovieServiceTest serviceTest = retrofit.create(DouBanMovieServiceTest.class);
+        serviceTest.getMovie(0, 10)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<RpDBM250>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        ContextUtils.showToast(DouBanTestActivity.this, e.toString());
+
+                    }
+
+                    @Override
+                    public void onNext(RpDBM250 rpDBM250Test) {
+                        rpDBM250 = rpDBM250Test;
+                        rpList.addAll(rpDBM250.getSubjects());
+                        adapter.notifyDataSetChanged();
+                        if (!isInitSWL) {
+                            initSwipeLayout();
+                        } else {
+                            if (swipeLayout.isRefreshing()) {
+                                swipeLayout.setRefreshing(false);
+                            }
+                        }
+                    }
+                });
+
+    }
+
 
     private interface DouBanMovieService {
         @GET("/v2/movie/top250")
@@ -207,5 +264,57 @@ public class DouBanTestActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+
+    private void test(RpDBM250 rpDBM250) {
+        Observable.just(rpDBM250)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Func1<RpDBM250, Observable<String>>() {
+                    @Override
+                    public Observable<String> call(RpDBM250 rpDBM250) {
+                        return Observable.from(rpDBM250.getSubjects())
+                                .flatMap(new Func1<Subject, Observable<String>>() {
+                                    @Override
+                                    public Observable<String> call(Subject subject) {
+                                        return Observable.just(subject.getTitle());
+                                    }
+                                });
+                    }
+                })
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        ContextUtils.showToast(DouBanTestActivity.this, s);
+                    }
+                });
+
+
+        //变换lift()的过程
+//        Observable.from(ints)
+//                .lift(new Observable.Operator<String, Integer>() {
+//                    @Override
+//                    public Subscriber<? super Integer> call(final Subscriber<? super String> subscriber) {
+//                        return new Subscriber<Integer>() {
+//                            @Override
+//                            public void onCompleted() {
+//                                subscriber.onCompleted();
+//                            }
+//
+//                            @Override
+//                            public void onError(Throwable e) {
+//                                subscriber.onError(e);
+//                            }
+//
+//                            @Override
+//                            public void onNext(Integer integer) {
+//                                subscriber.onNext("我是:" + integer);
+//                            }
+//                        };
+//                    }
+//                })
+//                .subscribe(onNextAction, onErrorAction, onCompletedAction);
+
     }
 }

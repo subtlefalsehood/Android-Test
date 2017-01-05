@@ -20,4 +20,5 @@
     <string name="input_username">请输入用户名</string>
     <string name="douban">豆瓣</string>
     <string name="scan">搜索</string>
+    <string name="md">材料设计</string>
 </resources>

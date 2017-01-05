@@ -18,6 +18,7 @@ import com.orhanobut.logger.Logger;
 import com.training.R;
 import com.training.common.utlis.StringUtil;
 import com.training.network.Constant;
+import com.training.network.model.ResponseObject;
 import com.training.network.model.ResponseRetrofit;
 import com.training.network.model.RpRetrofitBird;
 import com.training.network.model.RqLogin;
@@ -39,7 +40,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -105,45 +105,44 @@ public class RetrofitTestFragment extends Fragment {
         Snackbar.make(layout, content, Snackbar.LENGTH_LONG).show();
     }
 
+    public interface ResponseService {
+        @GET(Constant.BIRD_CONFIG_URL)
+        Call<ResponseRetrofit<List<RpRetrofitBird>>> getBase();
+
+        @POST(Constant.LOGIN_URL)
+        Call<ResponseObject> postLogin(@Body RqLogin rqLogin);
+    }
+
     private void login(String username, String password) {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.addInterceptor(new CreateInterceptor());
+//        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+//        builder.addInterceptor(new CreateInterceptor());
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(new PostConverterFactory(new Gson()).create())
 //                .addConverterFactory(GsonConverterFactory.create())
-                .client(builder.build())
+//                .client(builder.build())
                 .baseUrl(Constant.HTTP_URL)
                 .build();
-        LoginService loginService = retrofit.create(LoginService.class);
+        ResponseService loginService = retrofit.create(ResponseService.class);
         RqLogin rqLogin = new RqLogin();
         rqLogin.setPhoneNum(username);
         rqLogin.setPassword(password);
-        Call<ResponseRetrofit> call = loginService.postLogin(rqLogin);
-        call.enqueue(new Callback<ResponseRetrofit>() {
+
+        Call<ResponseObject> call = loginService.postLogin(rqLogin);
+        call.enqueue(new Callback<ResponseObject>() {
             @Override
-            public void onResponse(Call<ResponseRetrofit> call, Response<ResponseRetrofit> response) {
+            public void onResponse(Call<ResponseObject> call, Response<ResponseObject> response) {
                 response.code();
-                if (response != null) {
-                    tv_display.setText(response.body().getInfo());
-                }
+                tv_display.setText(response.body().getEndata());
             }
 
             @Override
-            public void onFailure(Call<ResponseRetrofit> call, Throwable t) {
-                showSnack(t.toString());
+            public void onFailure(Call<ResponseObject> call, Throwable t) {
+                showSnack(t.getMessage());
             }
         });
     }
 
-    public interface LoginService {
-        //        @FormUrlEncoded
-        @POST(Constant.LOGIN_URL)
-//        Call<ResponseRetrofit> postLogin(@Field("mac") String mac,
-//                                         @Field("phoneNum") String phoneNum,
-//                                         @Field("password") String password);
-        Call<ResponseRetrofit> postLogin(@Body RqLogin rqLogin);
-    }
 
     @OnClick(R.id.btn_get)
     void clickGet() {
@@ -174,11 +173,6 @@ public class RetrofitTestFragment extends Fragment {
 
             }
         });
-    }
-
-    public interface ResponseService {
-        @GET(Constant.BIRD_CONFIG_URL)
-        Call<ResponseRetrofit<List<RpRetrofitBird>>> getBase();
     }
 
     String rsaKey;
@@ -214,19 +208,16 @@ public class RetrofitTestFragment extends Fragment {
         private final MediaType MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
         private final Charset UTF_8 = Charset.forName("UTF-8");
 
-        private final Gson gson;
         private final TypeAdapter<T> adapter;
 
-        public PostEncodeRequestBodyConverter(Gson gson, TypeAdapter<T> adapter) {
-            this.gson = gson;
+        PostEncodeRequestBodyConverter(TypeAdapter<T> adapter) {
             this.adapter = adapter;
         }
 
 
-
         @Override
         public RequestBody convert(T value) throws IOException {
-            return RequestBody.create(MEDIA_TYPE, getEncodeJsonRequest(value).getBytes());
+            return RequestBody.create(MEDIA_TYPE, getEncodeJsonRequest(value));
         }
     }
 
@@ -240,14 +231,14 @@ public class RetrofitTestFragment extends Fragment {
         @Override
         public T convert(ResponseBody value) throws IOException {
 
-//            //解密字符串
-//            AES aes = new AES(rsaKey);
-//            return adapter.fromJson(aes.decrypt(value.string()));
-            return adapter.fromJson(value.string());
+            //解密字符串
+            AES aes = new AES(rsaKey);
+            return adapter.fromJson(aes.decrypt(value.string()));
+//            return adapter.fromJson(value.string());
         }
     }
 
-    public final class PostConverterFactory extends Converter.Factory {
+    private final class PostConverterFactory<T> extends Converter.Factory {
 
         public PostConverterFactory create() {
             return create(new Gson());
@@ -274,7 +265,7 @@ public class RetrofitTestFragment extends Fragment {
         @Override
         public Converter<?, RequestBody> requestBodyConverter(Type type, Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {
             TypeAdapter<?> adapter = gson.getAdapter(TypeToken.get(type));
-            return new PostEncodeRequestBodyConverter<>(gson, adapter);
+            return new PostEncodeRequestBodyConverter<>(adapter);
         }
     }
 

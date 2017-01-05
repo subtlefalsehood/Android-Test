@@ -17,20 +17,30 @@ import com.training.R;
 import com.training.common.utlis.StringUtil;
 import com.training.network.Constant;
 import com.training.network.model.BirdResponse;
+import com.training.network.model.RequestObject;
 import com.training.network.model.ResponseObject;
 import com.training.network.model.RqItem;
 import com.training.network.model.RqLogin;
+import com.training.network.model.UserInfo;
+import com.training.network.security.AES;
+import com.training.network.security.Base64;
+import com.training.network.security.Rsa;
+import com.training.network.utils.GsonUtil;
+import com.training.network.utils.RandomUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,12 +76,11 @@ public class OriginalHttpTestFragment extends Fragment {
     @OnClick(R.id.btn_get)
     void clickGet() {
         RqItem rqItem = new RqItem();
-//        MyAsyncTask myAsyncTask = new MyAsyncTask(GET, Constant.HTTP_URL + rqItem.getCmd() + "?" + "mac=" + rqItem.getMac());
         MyAsyncTask myAsyncTask = new MyAsyncTask(GET, Constant.HTTP_URL + Constant.BIRD_CONFIG_URL);
         myAsyncTask.execute();
     }
 
-    //    @OnClick(R.id.btn_login)
+    @OnClick(R.id.btn_login)
     void clickLogin() {
         String username = et_username.getText().toString();
         String password = et_password.getText().toString();
@@ -82,15 +91,7 @@ public class OriginalHttpTestFragment extends Fragment {
             if (username.trim().length() != 11) {
                 showSnack("您输入的密码有误");
             } else {
-//                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-//                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-//                if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-//                   login();
-//                } else {
-//                    showSnack("您使用的是流量");
-//                }
                 login(username, password);
-
             }
         }
     }
@@ -100,11 +101,7 @@ public class OriginalHttpTestFragment extends Fragment {
     }
 
 
-    RqLogin rqLogin;
-
     private void login(String username, String password) {
-        rqLogin.setPhoneNum(username);
-        rqLogin.setPassword(password);
         MyAsyncTask myAsyncTask = new MyAsyncTask(POST, Constant.HTTP_URL + Constant.LOGIN_URL);
         myAsyncTask.execute();
     }
@@ -115,7 +112,7 @@ public class OriginalHttpTestFragment extends Fragment {
         private int requestType = GET;
         private String urlString;
 
-        public MyAsyncTask(int requestType, String urlString) {
+        MyAsyncTask(int requestType, String urlString) {
             this.requestType = requestType;
             this.urlString = urlString;
         }
@@ -143,15 +140,26 @@ public class OriginalHttpTestFragment extends Fragment {
             } else {
                 Logger.d(s);
             }
-            ResponseObject responseObject = parseJsonToEntity(s);
-            if (responseObject != null) {
-                List<BirdResponse> birdResponses = parseEndataJson2Entity(responseObject.getEndata());
-                StringBuffer stringBuffer = new StringBuffer("");
-                if (birdResponses != null) {
-                    for (BirdResponse birdResponse : birdResponses) {
-                        stringBuffer.append(birdResponse.getResourceKey() + ":" + birdResponse.getContent() + "\n");
+            if (requestType == GET) {
+                ResponseObject responseObject = parseJsonToEntity(s);
+                if (responseObject != null) {
+                    List<BirdResponse> birdResponses = parseEndataJson2Entity(responseObject.getEndata());
+                    StringBuffer stringBuffer = new StringBuffer("");
+                    if (birdResponses != null) {
+                        for (BirdResponse birdResponse : birdResponses) {
+                            stringBuffer.append(birdResponse.getResourceKey() + ":" + birdResponse.getContent() + "\n");
+                        }
+                        tv_display.setText(stringBuffer.toString());
                     }
-                    tv_display.setText(stringBuffer.toString());
+                }
+            } else if (requestType == POST) {
+                ResponseObject responseObject = parseJsonToEntity(s);
+                if (responseObject != null) {
+                    AES aes = new AES(rsaKey);
+                    String jsonString = aes.decrypt(responseObject.getEndata());
+                    Logger.e(jsonString);
+                    UserInfo userInfo = GsonUtil.fromJson(jsonString, UserInfo.class);
+                    tv_display.setText(userInfo.getPhoneNum());
                 }
             }
         }
@@ -165,8 +173,20 @@ public class OriginalHttpTestFragment extends Fragment {
         buffer.append("&");
     }
 
+    //http://eyemiserver.criwell.com/v2.0/project/probably_info_all/get?mac=867068021147573&at=fb01cd06aa7f4b2e8bc5b5bbc8daab30
+    //http://eyemiserver.criwell.com/v2.0/project/probably_info_all/get?mac=867068021147573&at=fa8c71be018c4f78a99d7edb87760cf9
+
     private String doPostRequest(String urlString) {
         try {
+            RqLogin rqLogin = new RqLogin();
+            rqLogin.setPassword(et_password.getText().toString());
+            rqLogin.setPhoneNum(et_username.getText().toString());
+            byte[] encodeData = getEncodeJsonRequest(rqLogin);
+
+            if (encodeData == null) {
+                return null;
+            }
+
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(5000);
@@ -174,27 +194,40 @@ public class OriginalHttpTestFragment extends Fragment {
             connection.setDoInput(true);
             connection.setDoOutput(true);
             connection.setUseCaches(false);
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+            //设置请求体的类型是文本类型
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            //设置请求体的长度
+            connection.setRequestProperty("Content-Length", String.valueOf(encodeData.length));
+
+            OutputStream outputStream = connection.getOutputStream();
+            outputStream.write(encodeData);
+            outputStream.flush();
+            outputStream.close();
+
+            int code = connection.getResponseCode();
+            if (code == HttpURLConnection.HTTP_OK) {
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 InputStream is = connection.getInputStream();
-                Reader reader = new InputStreamReader(is, "UTF-8");
-                char[] buffer = new char[is.available()];
-                reader.read(buffer);
-                Logger.d(connection.getResponseMessage());
-                return String.valueOf(buffer);
+                byte[] buffer = new byte[1024];
+                int len = -1;
+                while ((len = is.read(buffer)) != -1) {
+                    bos.write(buffer, 0, len);
+                }
+                is.close();
+                return String.valueOf(bos);
             }
+            connection.disconnect();
             return null;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return e.toString();
         }
     }
 
-    //http://eyemiserver.criwell.com/v2.0/project/probably_info_all/get?mac=867068021147573&at=fb01cd06aa7f4b2e8bc5b5bbc8daab30
-    //http://eyemiserver.criwell.com/v2.0/project/probably_info_all/get?mac=867068021147573&at=fa8c71be018c4f78a99d7edb87760cf9
     private String doGetRequest(String urlString) {
         try {
             URL url = new URL(urlString);
-            Logger.i(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(5000);
             connection.setRequestMethod("GET");
@@ -204,14 +237,6 @@ public class OriginalHttpTestFragment extends Fragment {
                 StringBuffer bufferString = new StringBuffer("");
                 InputStream is = connection.getInputStream();
                 Reader reader = new InputStreamReader(is, "UTF-8");
-                //                int size = 100;
-//                int length = is.available();
-//                for (int i = 0; i < (length % size > 0 ? length / 100 + 1 : length / 100); i++) {
-//                    char[] buffer = new char[size];
-//                    reader.read(buffer);
-//                    bufferString.append(buffer);
-//                }
-//                Logger.d(connection.getResponseMessage());
                 BufferedReader bufferedReader = new BufferedReader(reader);
                 String s;
                 while ((s = bufferedReader.readLine()) != null) {
@@ -254,7 +279,7 @@ public class OriginalHttpTestFragment extends Fragment {
                     field.setAccessible(true);
                     if (field.getType().getName().equalsIgnoreCase("java.lang.String")) {
                         field.set(birdResponse, jsonObject.getString(field.getName()));
-                    }else if (field.getType().getName().equalsIgnoreCase("int")){
+                    } else if (field.getType().getName().equalsIgnoreCase("int")) {
                         field.set(birdResponse, jsonObject.getInt(field.getName()));
                     }
                 }
@@ -263,6 +288,33 @@ public class OriginalHttpTestFragment extends Fragment {
             return birdResponses;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    String rsaKey;
+
+    private byte[] getEncodeJsonRequest(RequestObject requestObject) {
+        try {
+            rsaKey = RandomUtils.getRandomString(16);
+            Rsa rsa = new Rsa();
+            byte[] encRsaBytes = rsa.encryptByPublicKey(rsaKey.getBytes());
+            String encodeRsaKey = Base64.encryptBase64(encRsaBytes);
+
+            AES aes = new AES(rsaKey);
+            String requestJson = GsonUtil.toJson(requestObject);
+            Logger.d(requestJson);
+            String encodeRequestData = aes.encrypt(requestJson);
+
+            // 将RSA的key值和加密后的请求参数Json串组合成一个JSON串
+            String postJson = "{\"enkey\":\"" + encodeRsaKey
+                    + "\",\"endata\":\"" + encodeRequestData + "\"}";
+            postJson = URLEncoder.encode(postJson, "utf-8");
+            requestJson = "criJson=" + postJson;
+            Logger.d(requestJson);
+            return requestJson.getBytes("utf-8");
+        } catch (Exception e) {
+            Logger.e(e.toString());
             return null;
         }
     }

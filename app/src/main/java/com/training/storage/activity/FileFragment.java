@@ -1,6 +1,5 @@
 package com.training.storage.activity;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 
 import com.training.R;
 import com.training.common.utlis.ContextUtils;
+import com.training.storage.model.RecipeInfo;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -181,35 +181,5 @@ public class FileFragment extends Fragment {
             e.printStackTrace();
         }
         return recipeInfos;
-    }
-
-    public class RecipeInfo {
-        private String bitmapPath;
-        private Bitmap bitmap;
-        private String name;
-
-        public Bitmap getBitmap() {
-            return bitmap;
-        }
-
-        public void setBitmap(Bitmap bitmap) {
-            this.bitmap = bitmap;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getBitmapPath() {
-            return bitmapPath;
-        }
-
-        public void setBitmapPath(String bitmapPath) {
-            this.bitmapPath = bitmapPath;
-        }
     }
 }

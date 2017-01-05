@@ -39,6 +39,11 @@ public class StringUtil {
         return (str == null || str.trim().length() == 0);
     }
 
+    public static boolean isNotBlank(String str) {
+
+        return !isBlank(str);
+    }
+
 
     /**
      * is null or its length is 0

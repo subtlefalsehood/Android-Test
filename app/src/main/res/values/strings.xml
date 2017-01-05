@@ -25,4 +25,5 @@
     <string name="input_password">please input password</string>
     <string name="input_username">please input username</string>
     <string name="scan">scan</string>
+    <string name="md">md</string>
 </resources>

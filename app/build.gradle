@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.training"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
@@ -23,16 +23,22 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:recyclerview-v7:22.2.1'
+    compile 'com.android.support:support-v4:22.2.1'
+    compile 'com.android.support:design:22.2.1'
+    //Logger
     compile 'com.orhanobut:logger:1.15'
     //butterknife
     compile 'com.jakewharton:butterknife:8.4.0'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
-    compile 'com.android.support:design:22.2.1'
     //retrofit2.0
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    //    compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.android.support:recyclerview-v7:22.2.1'
-    compile 'com.android.support:support-v4:22.2.1'
     compile 'com.squareup.picasso:picasso:2.3.2'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.facebook.fresco:fresco:1.0.0'
+    compile 'io.reactivex:rxjava:1.0.14'
+    compile 'io.reactivex:rxandroid:1.0.1'
+    compile 'com.squareup.retrofit2:retrofit-adapters:2.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
 }

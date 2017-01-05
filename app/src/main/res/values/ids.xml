@@ -4,4 +4,5 @@
     <item name="btn_service" type="id" />
     <item name="btn_network" type="id" />
     <item name="btn_douban" type="id" />
+    <item name="btn_md" type="id" />
 </resources>

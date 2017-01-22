@@ -12,7 +12,4 @@ public class Constant {
     public static final String BIRD_CONFIG_URL = "v2.0/fn/conversation/get";
 
     public static String DEVICE_ID = "eye-android";
-
-    public static final String DOUBAN_URL = "https://api.douban.com/";
-    public static final String DOUBAN_MOVIE_TOP250 = "/v2/movie/top250";
 }

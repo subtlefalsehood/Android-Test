@@ -26,4 +26,5 @@
     <string name="input_username">please input username</string>
     <string name="scan">scan</string>
     <string name="md">md</string>
+    <string name="echart">echart</string>
 </resources>

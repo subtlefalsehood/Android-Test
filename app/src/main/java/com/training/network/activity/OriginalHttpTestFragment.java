@@ -207,8 +207,8 @@ public class OriginalHttpTestFragment extends Fragment {
 
             int code = connection.getResponseCode();
             if (code == HttpURLConnection.HTTP_OK) {
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 InputStream is = connection.getInputStream();
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 byte[] buffer = new byte[1024];
                 int len = -1;
                 while ((len = is.read(buffer)) != -1) {
@@ -314,7 +314,7 @@ public class OriginalHttpTestFragment extends Fragment {
             Logger.d(requestJson);
             return requestJson.getBytes("utf-8");
         } catch (Exception e) {
-            Logger.e(e.toString());
+            e.printStackTrace();
             return null;
         }
     }

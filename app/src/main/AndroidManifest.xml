@@ -34,9 +34,10 @@
 
         <activity android:name=".storage.activity.DataTestActivity" />
         <activity android:name=".network.activity.NetWorkTestActivity" />
-        <activity android:name=".douban.DouBanTestActivity" />
+        <activity android:name=".douban.MovieTestActivity" />
         <activity android:name=".network.activity.WebActivity" />
-        <activity android:name=".mdtest.MDTestActivity"></activity>
+        <activity android:name=".mdtest.MDTestActivity"/>
+        <activity android:name=".EChartsTestActivity"/>
     </application>
 
 </manifest>

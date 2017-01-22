@@ -6,17 +6,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.training.R;
+import com.training.common.model.OnMultiTouchListener;
 import com.training.common.utlis.ContextUtils;
-import com.training.network.Constant;
+import com.training.douban.model.DouBanAdapter;
 import com.training.network.activity.WebActivity;
 import com.training.network.model.EndlessRecyclerOnScrollListener;
 import com.training.network.model.RpDBM250;
@@ -44,7 +40,7 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 
-public class DouBanTestActivity extends AppCompatActivity {
+public class MovieTestActivity extends AppCompatActivity implements DouBanAdapter.DoWhat {
     @BindView(R.id.rv)
     RecyclerView rv;
 
@@ -68,88 +64,49 @@ public class DouBanTestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_douban_test);
         ButterKnife.bind(this);
-//        StaggeredGridLayoutManager staggeredGridLayoutManager =
-//                new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-//        rv.setLayoutManager(staggeredGridLayoutManager);
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv.setLayoutManager(linearLayoutManager);
-        adapter = new DouBanAdapter();
+        adapter = new DouBanAdapter(this, rpList, this);
         rv.setAdapter(adapter);
-    }
-
-    @OnClick(R.id.btn_start)
-    void start() {
-        test1();
-//        getDouBanMovieList(0, 10);
-    }
-
-    private class DouBanAdapter extends RecyclerView.Adapter<DouBanAdapter.DBHolder> {
-
-        @Override
-        public DBHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater
-                    .from(DouBanTestActivity.this)
-                    .inflate(R.layout.activity_douban_item, parent, false);
-            final DBHolder holder = new DBHolder(view);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(DouBanTestActivity.this, WebActivity.class);
-                    intent.putExtra("url", rpList.get(holder.getAdapterPosition()).getAlt());
-                    startActivity(intent);
+        findViewById(R.id.ll).setOnTouchListener(new OnMultiTouchListener() {
+            @Override
+            public boolean onMultiTouch(int count) {
+                if (count == 2) {
+                    rv.scrollToPosition(0);
+                    return true;
                 }
-            });
-            return holder;
-        }
-
-        @Override
-        public void onBindViewHolder(DBHolder holder, int position) {
-            Subject subject = rpList.get(position);
-            holder.textView.setText(subject.getTitle());
-            Picasso.with(DouBanTestActivity.this)
-                    .load(subject.getImages().getLarge())
-                    .into(holder.imageView);
-            holder.origin_title.setText(subject.getOriginal_title());
-            holder.year.setText(subject.getYear());
-            holder.rb.setRating((float) (subject.getRating().getAverage() / 2));
-
-            StringBuffer buffer = new StringBuffer("");
-            for (String genre : subject.getGenres()) {
-                buffer.append(genre);
-                buffer.append(",");
+                return false;
             }
-            buffer.deleteCharAt(buffer.length() - 1);
-            holder.genre.setText(buffer.toString());
-        }
+        });
 
-        @Override
-        public int getItemCount() {
-            return rpList.size();
-        }
+        initSwipeLayout();
+        test1(0, 10);
+    }
 
-        class DBHolder extends RecyclerView.ViewHolder {
-            View itemView;
-            TextView textView;
-            ImageView imageView;
-            TextView origin_title;
-            TextView genre;
-            TextView year;
-            RatingBar rb;
+    @Override
+    public void onMovieItemClick(View v, int position) {
+        Intent intent = new Intent(this, WebActivity.class);
+        intent.putExtra("url", rpList.get(position).getAlt());
+        startActivity(intent);
+    }
 
-            DBHolder(View itemView) {
-                super(itemView);
-                this.itemView = itemView;
-                imageView = (ImageView) itemView.findViewById(R.id.img_movie);
-                textView = (TextView) itemView.findViewById(R.id.tv_title);
-                origin_title = (TextView) itemView.findViewById(R.id.tv_origin_title);
-                genre = (TextView) itemView.findViewById(R.id.tv_genre);
-                year = (TextView) itemView.findViewById(R.id.tv_year);
-                rb = (RatingBar) itemView.findViewById(R.id.rb);
-            }
+
+    @OnClick({R.id.btn_start, R.id.ll})
+    void onClick(View v) {
+        switch (v.getId()) {
+
         }
     }
 
+    //test rx+retrofit
+    private interface DouBanMovieService {
+        @GET(DoubanUrl.DOUBAN_MOVIE_TOP250)
+        Observable<RpDBM250> getMovieWithRxJava(@Query("start") int start, @Query("count") int count);
+
+        @GET("/v2/movie/top250")
+        Call<RpDBM250> getMovieWithCall(@Query("start") int start, @Query("count") int count);
+    }
 
     private void getDouBanMovieList(int start, int count) {
         Retrofit retrofit = new Retrofit.Builder()
@@ -157,7 +114,7 @@ public class DouBanTestActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         DouBanMovieService douBanMovieService = retrofit.create(DouBanMovieService.class);
-        Call<RpDBM250> call = douBanMovieService.getMovie(start, count);
+        Call<RpDBM250> call = douBanMovieService.getMovieWithCall(start, count);
         call.enqueue(new Callback<RpDBM250>() {
             @Override
             public void onResponse(Call<RpDBM250> call, Response<RpDBM250> response) {
@@ -183,20 +140,14 @@ public class DouBanTestActivity extends AppCompatActivity {
         });
     }
 
-    //test rx+retrofit
-    private interface DouBanMovieServiceTest {
-        @GET(Constant.DOUBAN_MOVIE_TOP250)
-        Observable<RpDBM250> getMovie(@Query("start") int start, @Query("count") int count);
-    }
-
-    private void test1() {
+    private void test1(int start, int count) {
         final Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constant.DOUBAN_URL)
+                .baseUrl(DoubanUrl.DOUBAN_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
-        final DouBanMovieServiceTest serviceTest = retrofit.create(DouBanMovieServiceTest.class);
-        serviceTest.getMovie(0, 10)
+        final DouBanMovieService serviceTest = retrofit.create(DouBanMovieService.class);
+        serviceTest.getMovieWithRxJava(start, count)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<RpDBM250>() {
@@ -207,8 +158,8 @@ public class DouBanTestActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        ContextUtils.showToast(DouBanTestActivity.this, e.toString());
-
+                        ContextUtils.showToast(MovieTestActivity.this, e.toString());
+                        swipeLayout.setRefreshing(false);
                     }
 
                     @Override
@@ -217,28 +168,21 @@ public class DouBanTestActivity extends AppCompatActivity {
                         rpList.addAll(rpDBM250.getSubjects());
                         adapter.notifyDataSetChanged();
                         if (!isInitSWL) {
-                            initSwipeLayout();
-                        } else {
-                            if (swipeLayout.isRefreshing()) {
-                                swipeLayout.setRefreshing(false);
-                            }
+                            isInitSWL = true;
+                            btn_start.setVisibility(View.GONE);
+                            title.setText(rpDBM250.getTitle());
+                            title.setVisibility(View.VISIBLE);
+                        }
+                        if (swipeLayout.isRefreshing()) {
+                            swipeLayout.setRefreshing(false);
                         }
                     }
                 });
-
     }
 
-
-    private interface DouBanMovieService {
-        @GET("/v2/movie/top250")
-        Call<RpDBM250> getMovie(@Query("start") int start, @Query("count") int count);
-    }
 
     private void initSwipeLayout() {
-        isInitSWL = true;
-        btn_start.setVisibility(View.GONE);
-        title.setText(rpDBM250.getTitle());
-        title.setVisibility(View.VISIBLE);
+        swipeLayout.setRefreshing(true);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -251,9 +195,9 @@ public class DouBanTestActivity extends AppCompatActivity {
                 if (!swipeLayout.isRefreshing()) {
                     if (rpDBM250 != null) {
                         if (rpDBM250.getStart() + rpDBM250.getCount() <= 240) {
-                            getDouBanMovieList(rpDBM250.getStart() + rpDBM250.getCount(), 10);
+                            test1(rpDBM250.getStart() + rpDBM250.getCount(), 10);
                         } else if (rpDBM250.getStart() + rpDBM250.getCount() < 250) {
-                            getDouBanMovieList(rpDBM250.getStart() + rpDBM250.getCount()
+                            test1(rpDBM250.getStart() + rpDBM250.getCount()
                                     , 250 - (rpDBM250.getStart() + rpDBM250.getCount()));
                         } else {
                             ContextUtils.showSnack(rv, "到底了-V-");
@@ -286,35 +230,8 @@ public class DouBanTestActivity extends AppCompatActivity {
                 .subscribe(new Action1<String>() {
                     @Override
                     public void call(String s) {
-                        ContextUtils.showToast(DouBanTestActivity.this, s);
+                        ContextUtils.showToast(MovieTestActivity.this, s);
                     }
                 });
-
-
-        //变换lift()的过程
-//        Observable.from(ints)
-//                .lift(new Observable.Operator<String, Integer>() {
-//                    @Override
-//                    public Subscriber<? super Integer> call(final Subscriber<? super String> subscriber) {
-//                        return new Subscriber<Integer>() {
-//                            @Override
-//                            public void onCompleted() {
-//                                subscriber.onCompleted();
-//                            }
-//
-//                            @Override
-//                            public void onError(Throwable e) {
-//                                subscriber.onError(e);
-//                            }
-//
-//                            @Override
-//                            public void onNext(Integer integer) {
-//                                subscriber.onNext("我是:" + integer);
-//                            }
-//                        };
-//                    }
-//                })
-//                .subscribe(onNextAction, onErrorAction, onCompletedAction);
-
     }
 }

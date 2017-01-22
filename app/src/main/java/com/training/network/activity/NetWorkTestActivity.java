@@ -31,12 +31,12 @@ public class NetWorkTestActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
 //        titles.add(getString(R.string.volley));
-        titles.add(getString(R.string.retrofit));
         titles.add(getString(R.string.original));
+        titles.add(getString(R.string.retrofit));
 
 //        fragments.add(new VolleyTestFragment());
-        fragments.add(new RetrofitTestFragment());
         fragments.add(new OriginalHttpTestFragment());
+        fragments.add(new RetrofitTestFragment());
 
         MyFragmentPagerAdapt adapt =
                 new MyFragmentPagerAdapt(getSupportFragmentManager(),

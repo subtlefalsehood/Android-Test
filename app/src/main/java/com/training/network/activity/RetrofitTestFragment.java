@@ -28,9 +28,12 @@ import com.training.network.security.Rsa;
 import com.training.network.utils.GsonUtil;
 import com.training.network.utils.RandomUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -132,8 +135,9 @@ public class RetrofitTestFragment extends Fragment {
         call.enqueue(new Callback<ResponseObject>() {
             @Override
             public void onResponse(Call<ResponseObject> call, Response<ResponseObject> response) {
-                response.code();
-                tv_display.setText(response.body().getEndata());
+                int code = response.code();
+                ResponseObject responseObject = response.body();
+                tv_display.setText(code + "");
             }
 
             @Override
@@ -177,11 +181,10 @@ public class RetrofitTestFragment extends Fragment {
 
     String rsaKey;
 
-    private String getEncodeJsonRequest(Object object) {
+    private byte[] getEncodeJsonRequest(Object object) {
         try {
             rsaKey = RandomUtils.getRandomString(16);
             Rsa rsa = new Rsa();
-
             byte[] encRsaBytes = rsa.encryptByPublicKey(rsaKey.getBytes());
             String encodeRsaKey = Base64.encryptBase64(encRsaBytes);
 
@@ -196,55 +199,81 @@ public class RetrofitTestFragment extends Fragment {
             postJson = URLEncoder.encode(postJson, "utf-8");
             requestJson = "criJson=" + postJson;
             Logger.d(requestJson);
-            return requestJson;
+            return requestJson.getBytes("utf-8");
         } catch (Exception e) {
             e.printStackTrace();
-            return "";
+            return null;
         }
     }
 
 
+    private static final MediaType MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
+    private static final Charset UTF_8 = Charset.forName("UTF-8");
+
     public class PostEncodeRequestBodyConverter<T> implements Converter<T, RequestBody> {
-        private final MediaType MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
-        private final Charset UTF_8 = Charset.forName("UTF-8");
+        private TypeAdapter<T> adapter;
+        private Gson gson;
 
-        private final TypeAdapter<T> adapter;
-
-        PostEncodeRequestBodyConverter(TypeAdapter<T> adapter) {
+        PostEncodeRequestBodyConverter(TypeAdapter<T> adapter, Gson gson) {
             this.adapter = adapter;
+            this.gson = gson;
         }
 
 
         @Override
         public RequestBody convert(T value) throws IOException {
-            return RequestBody.create(MEDIA_TYPE, getEncodeJsonRequest(value));
+            byte[] encodeBytes = getEncodeJsonRequest(value);
+            Logger.e("encodeBytes length = " + encodeBytes.length);
+            byte[] bytes = gson.toJson(value).getBytes();
+            return RequestBody.create(MEDIA_TYPE, encodeBytes);
         }
     }
 
     public class PostDecodeResponseBodyConverter<T> implements Converter<ResponseBody, T> {
-        private final TypeAdapter<T> adapter;
+        private TypeAdapter<T> adapter;
+        private Gson gson;
 
-        PostDecodeResponseBodyConverter(TypeAdapter<T> adapter) {
+        PostDecodeResponseBodyConverter(TypeAdapter<T> adapter, Gson gson) {
             this.adapter = adapter;
+            this.gson = gson;
         }
 
         @Override
         public T convert(ResponseBody value) throws IOException {
 
             //解密字符串
-            AES aes = new AES(rsaKey);
-            return adapter.fromJson(aes.decrypt(value.string()));
-//            return adapter.fromJson(value.string());
+//            AES aes = new AES(rsaKey);
+//            return adapter.fromJson(aes.decrypt(value.string()));
+//            InputStream is = value.byteStream();
+//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//            byte[] buffer = new byte[1024];
+//            int len = -1;
+//            while ((len = is.read(buffer)) != -1) {
+//                bos.write(buffer, 0, len);
+//            }
+//            is.close();
+//            String s = String.valueOf(bos);
+//            bos.close();
+
+            InputStream is = value.byteStream();
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int len = -1;
+            while ((len = is.read(buffer)) != -1) {
+                bos.write(buffer, 0, len);
+            }
+            is.close();
+            return (T) gson.fromJson(bos.toString(), ResponseObject.class);
         }
     }
 
-    private final class PostConverterFactory<T> extends Converter.Factory {
+    public class PostConverterFactory extends Converter.Factory {
 
-        public PostConverterFactory create() {
+        PostConverterFactory create() {
             return create(new Gson());
         }
 
-        public PostConverterFactory create(Gson gson) {
+        PostConverterFactory create(Gson gson) {
             return new PostConverterFactory(gson);
         }
 
@@ -258,14 +287,14 @@ public class RetrofitTestFragment extends Fragment {
         @Override
         public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
             TypeAdapter<?> adapter = gson.getAdapter(TypeToken.get(type));
-            return new PostDecodeResponseBodyConverter<>(adapter);
+            return new PostDecodeResponseBodyConverter<>(adapter, gson);
         }
 
 
         @Override
         public Converter<?, RequestBody> requestBodyConverter(Type type, Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {
             TypeAdapter<?> adapter = gson.getAdapter(TypeToken.get(type));
-            return new PostEncodeRequestBodyConverter<>(adapter);
+            return new PostEncodeRequestBodyConverter<>(adapter, gson);
         }
     }
 
@@ -277,6 +306,17 @@ public class RetrofitTestFragment extends Fragment {
             okhttp3.Response response = chain.proceed(chain.request());  //如果401了，会先执行TokenAuthenticator
             Logger.e("CreateInterceptor request url " + response.request().url());
             Logger.e("CreateInterceptor  response code " + response.code());
+            if (response.code() == HttpURLConnection.HTTP_OK) {
+                InputStream is = response.body().byteStream();
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                byte[] buffer = new byte[1024];
+                int len = -1;
+                while ((len = is.read(buffer)) != -1) {
+                    bos.write(buffer, 0, len);
+                }
+                is.close();
+                Logger.e("CreateInterceptor response endata " + String.valueOf(bos));
+            }
             return response;
         }
     }

@@ -15,7 +15,8 @@
         <Button
             android:id="@+id/btn_start"
             style="@style/MyBtnStyle"
-            android:text="@string/scan" />
+            android:text="@string/scan"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/title"
@@ -31,6 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/ll">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv"
             android:layout_width="match_parent"

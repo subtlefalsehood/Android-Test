@@ -6,4 +6,6 @@
     <item name="btn_douban" type="id" />
     <item name="btn_md" type="id" />
     <item name="btn_echart" type="id" />
+    <item name="btn_touch_event" type="id" />
+    <item name="btn_qr" type="id" />
 </resources>

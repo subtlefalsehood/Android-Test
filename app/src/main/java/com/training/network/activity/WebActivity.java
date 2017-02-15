@@ -14,7 +14,7 @@ import com.training.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class WebActivity extends AppCompatActivity{
+public class WebActivity extends AppCompatActivity {
     @BindView(R.id.webView)
     WebView webView;
 

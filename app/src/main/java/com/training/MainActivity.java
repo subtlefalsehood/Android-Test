@@ -25,7 +25,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     Button[] buttons;
     private int[][] ids = {{R.id.btn_service, R.string.service},
             {R.id.btn_data, R.string.data,}, {R.id.btn_network, R.string.network}
-            , {R.id.btn_douban, R.string.douban}, {R.id.btn_md, R.string.md}};
+            , {R.id.btn_douban, R.string.douban}, {R.id.btn_md, R.string.md}
+            , {R.id.btn_touch_event, R.string.touch_event}
+            , {R.id.btn_qr, R.string.qr}};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 break;
             case R.id.btn_md:
                 ContextUtils.jumpActivity(this, MDTestActivity.class, false);
+                break;
+            case R.id.btn_touch_event:
+                ContextUtils.jumpActivity(this, TouchEventActivity.class, false);
+                break;
+            case R.id.btn_qr:
+                ContextUtils.jumpActivity(this, QRMainActivity.class, false);
                 break;
         }
     }

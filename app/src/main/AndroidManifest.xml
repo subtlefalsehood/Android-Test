@@ -36,8 +36,13 @@
         <activity android:name=".network.activity.NetWorkTestActivity" />
         <activity android:name=".douban.MovieTestActivity" />
         <activity android:name=".network.activity.WebActivity" />
-        <activity android:name=".mdtest.MDTestActivity"/>
-        <activity android:name=".EChartsTestActivity"/>
+        <activity android:name=".mdtest.MDTestActivity" />
+        <activity android:name=".EChartsTestActivity" />
+        <activity android:name=".TouchEventActivity" />
+
+        <!--二维码扫描-->
+        <activity android:name=".QRMainActivity" />
+        <activity android:name=".CustomScanActivity" />
     </application>
 
 </manifest>

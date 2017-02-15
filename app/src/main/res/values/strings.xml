@@ -27,4 +27,6 @@
     <string name="scan">scan</string>
     <string name="md">md</string>
     <string name="echart">echart</string>
+    <string name="touch_event">touch_event</string>
+    <string name="qr">qr</string>
 </resources>

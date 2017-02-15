@@ -1,4 +1,4 @@
-package com.training;
+package com.training.qr;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -15,6 +15,7 @@ import android.widget.Button;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.orhanobut.logger.Logger;
+import com.training.R;
 import com.training.common.utlis.ContextUtils;
 import com.training.network.activity.WebActivity;
 

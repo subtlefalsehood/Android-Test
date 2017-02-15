@@ -13,6 +13,7 @@ import com.training.common.utlis.ContextUtils;
 import com.training.douban.MovieTestActivity;
 import com.training.mdtest.MDTestActivity;
 import com.training.network.activity.NetWorkTestActivity;
+import com.training.qr.QRMainActivity;
 import com.training.service.activity.ServiceTestActivity;
 import com.training.storage.activity.DataTestActivity;
 

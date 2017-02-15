@@ -41,8 +41,8 @@
         <activity android:name=".TouchEventActivity" />
 
         <!--二维码扫描-->
-        <activity android:name=".QRMainActivity" />
-        <activity android:name=".CustomScanActivity" />
+        <activity android:name=".qr.QRMainActivity" />
+        <activity android:name=".qr.CustomScanActivity" />
     </application>
 
 </manifest>

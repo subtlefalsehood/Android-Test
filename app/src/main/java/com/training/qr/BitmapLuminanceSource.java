@@ -1,4 +1,4 @@
-package com.training;
+package com.training.qr;
 
 import android.graphics.Bitmap;
 

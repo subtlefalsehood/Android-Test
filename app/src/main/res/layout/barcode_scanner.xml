@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.training.CustomViewfinderView
+    <com.training.qr.CustomViewfinderView
         android:id="@+id/zxing_viewfinder_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

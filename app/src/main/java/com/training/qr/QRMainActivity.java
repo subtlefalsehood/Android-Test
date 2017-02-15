@@ -1,4 +1,4 @@
-package com.training;
+package com.training.qr;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.training.R;
 import com.training.network.activity.WebActivity;
 
 /**

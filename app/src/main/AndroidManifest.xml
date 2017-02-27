@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.training">
 
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -40,9 +41,17 @@
         <activity android:name=".EChartsTestActivity" />
         <activity android:name=".TouchEventActivity" />
 
-        <!--二维码扫描-->
-        <activity android:name=".qr.QRMainActivity" />
-        <activity android:name=".qr.CustomScanActivity" />
+        <!-- 二维码扫描 -->
+        <activity android:name=".others.qr.QRMainActivity" />
+        <activity android:name=".others.qr.CustomScanActivity" />
+        <!--截屏-->
+        <activity android:name=".others.screenshot.ScreenCaptureActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
+        <service
+            android:name=".others.screenshot.FloatViewService"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>

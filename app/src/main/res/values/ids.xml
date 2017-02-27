@@ -8,4 +8,5 @@
     <item name="btn_echart" type="id" />
     <item name="btn_touch_event" type="id" />
     <item name="btn_qr" type="id" />
+    <item name="btn_screenshot" type="id" />
 </resources>

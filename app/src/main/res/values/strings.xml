@@ -29,4 +29,5 @@
     <string name="echart">echart</string>
     <string name="touch_event">touch_event</string>
     <string name="qr">qr</string>
+    <string name="screenshot">screenshot</string>
 </resources>

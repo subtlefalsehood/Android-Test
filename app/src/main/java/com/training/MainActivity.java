@@ -1,5 +1,6 @@
 package com.training;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -13,7 +14,7 @@ import com.training.common.utlis.ContextUtils;
 import com.training.douban.MovieTestActivity;
 import com.training.mdtest.MDTestActivity;
 import com.training.network.activity.NetWorkTestActivity;
-import com.training.qr.QRMainActivity;
+import com.training.others.screenshot.FloatViewService;
 import com.training.service.activity.ServiceTestActivity;
 import com.training.storage.activity.DataTestActivity;
 
@@ -28,7 +29,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             {R.id.btn_data, R.string.data,}, {R.id.btn_network, R.string.network}
             , {R.id.btn_douban, R.string.douban}, {R.id.btn_md, R.string.md}
             , {R.id.btn_touch_event, R.string.touch_event}
-            , {R.id.btn_qr, R.string.qr}};
+//            , {R.id.btn_screenshot, R.string.screenshot}
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setupView();
+        intent = new Intent(this, FloatViewService.class);
+        startService(intent);
     }
 
     public void setupView() {
@@ -50,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             ContextUtils.setClick(this, buttons[i]);
         }
     }
+
+    private Intent intent;
 
     @Override
     public void onClick(View v) {
@@ -72,9 +78,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             case R.id.btn_touch_event:
                 ContextUtils.jumpActivity(this, TouchEventActivity.class, false);
                 break;
-            case R.id.btn_qr:
-                ContextUtils.jumpActivity(this, QRMainActivity.class, false);
+            case R.id.btn_screenshot:
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        stopService(intent);
     }
 }

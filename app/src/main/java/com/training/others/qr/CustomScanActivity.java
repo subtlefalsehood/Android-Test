@@ -1,4 +1,4 @@
-package com.training.qr;
+package com.training.others.qr;
 
 import android.app.AlertDialog;
 import android.content.Intent;

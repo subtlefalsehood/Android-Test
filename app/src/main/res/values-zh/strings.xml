@@ -23,4 +23,5 @@
     <string name="md">材料设计</string>
     <string name="touch_event">点击事件</string>
     <string name="qr">二维码扫描</string>
+    <string name="screenshot">截屏</string>
 </resources>

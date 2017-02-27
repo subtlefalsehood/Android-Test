@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.training.qr;
+package com.training.others.qr;
 
 import android.content.Intent;
 import android.net.Uri;
 
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.android.Intents;
 
 import java.util.Arrays;
 import java.util.List;
@@ -59,7 +60,7 @@ public class DecodeFormatManager {
 
     static Vector<BarcodeFormat> parseDecodeFormats(Intent intent) {
         List<String> scanFormats = null;
-        String scanFormatsString = intent.getStringExtra(Intents.Scan.SCAN_FORMATS);
+        String scanFormatsString = intent.getStringExtra(Intents.Scan.FORMATS);
         if (scanFormatsString != null) {
             scanFormats = Arrays.asList(COMMA_PATTERN.split(scanFormatsString));
         }
@@ -67,7 +68,7 @@ public class DecodeFormatManager {
     }
 
     static Vector<BarcodeFormat> parseDecodeFormats(Uri inputUri) {
-        List<String> formats = inputUri.getQueryParameters(Intents.Scan.SCAN_FORMATS);
+        List<String> formats = inputUri.getQueryParameters(Intents.Scan.FORMATS);
         if (formats != null && formats.size() == 1 && formats.get(0) != null) {
             formats = Arrays.asList(COMMA_PATTERN.split(formats.get(0)));
         }

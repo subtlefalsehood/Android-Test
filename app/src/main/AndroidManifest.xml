@@ -45,8 +45,11 @@
         <activity android:name=".others.qr.QRMainActivity" />
         <activity android:name=".others.qr.CustomScanActivity" />
         <!--截屏-->
-        <activity android:name=".others.screenshot.ScreenCaptureActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity
+            android:name=".others.screenshot.ScreenCaptureActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!--拖拽-->
+        <activity android:name=".others.drag.DragTestActivity" />
 
         <service
             android:name=".others.screenshot.FloatViewService"

@@ -9,4 +9,5 @@
     <item name="btn_touch_event" type="id" />
     <item name="btn_qr" type="id" />
     <item name="btn_screenshot" type="id" />
+    <item name="btn_drag" type="id" />
 </resources>

@@ -14,6 +14,7 @@ import com.training.common.utlis.ContextUtils;
 import com.training.douban.MovieTestActivity;
 import com.training.mdtest.MDTestActivity;
 import com.training.network.activity.NetWorkTestActivity;
+import com.training.others.drag.DragTestActivity;
 import com.training.others.screenshot.FloatViewService;
 import com.training.service.activity.ServiceTestActivity;
 import com.training.storage.activity.DataTestActivity;
@@ -28,8 +29,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     private int[][] ids = {{R.id.btn_service, R.string.service},
             {R.id.btn_data, R.string.data,}, {R.id.btn_network, R.string.network}
             , {R.id.btn_douban, R.string.douban}, {R.id.btn_md, R.string.md}
-            , {R.id.btn_touch_event, R.string.touch_event}
-//            , {R.id.btn_screenshot, R.string.screenshot}
+//            , {R.id.btn_touch_event, R.string.touch_event}
+//            , {R.id.btn_qr, R.string.qr}
+            , {R.id.btn_screenshot, R.string.screenshot}
+            , {R.id.btn_drag, R.string.drag}
     };
 
     @Override
@@ -38,8 +41,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setupView();
-        intent = new Intent(this, FloatViewService.class);
-        startService(intent);
     }
 
     public void setupView() {
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         }
     }
 
-    private Intent intent;
+    private boolean isStartFloat = false;
 
     @Override
     public void onClick(View v) {
@@ -79,6 +80,13 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 ContextUtils.jumpActivity(this, TouchEventActivity.class, false);
                 break;
             case R.id.btn_screenshot:
+                if (!isStartFloat) {
+                    startService(new Intent(this, FloatViewService.class));
+                    isStartFloat = true;
+                }
+                break;
+            case R.id.btn_drag:
+                ContextUtils.jumpActivity(this, DragTestActivity.class, false);
                 break;
         }
     }
@@ -86,6 +94,5 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        stopService(intent);
     }
 }

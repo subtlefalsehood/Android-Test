@@ -23,7 +23,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,8 +46,6 @@ public class MovieTestActivity extends AppCompatActivity implements DouBanAdapte
     @BindView(R.id.title)
     TextView title;
 
-    @BindView(R.id.btn_start)
-    View btn_start;
 
     @BindView(R.id.srl)
     SwipeRefreshLayout swipeLayout;
@@ -64,6 +61,7 @@ public class MovieTestActivity extends AppCompatActivity implements DouBanAdapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_douban_test);
         ButterKnife.bind(this);
+
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv.setLayoutManager(linearLayoutManager);
@@ -89,14 +87,6 @@ public class MovieTestActivity extends AppCompatActivity implements DouBanAdapte
         Intent intent = new Intent(this, WebActivity.class);
         intent.putExtra("url", rpList.get(position).getAlt());
         startActivity(intent);
-    }
-
-
-    @OnClick({R.id.btn_start, R.id.ll})
-    void onClick(View v) {
-        switch (v.getId()) {
-
-        }
     }
 
     //test rx+retrofit
@@ -169,7 +159,6 @@ public class MovieTestActivity extends AppCompatActivity implements DouBanAdapte
                         adapter.notifyDataSetChanged();
                         if (!isInitSWL) {
                             isInitSWL = true;
-                            btn_start.setVisibility(View.GONE);
                             title.setText(rpDBM250.getTitle());
                             title.setVisibility(View.VISIBLE);
                         }

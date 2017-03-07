@@ -30,4 +30,5 @@
     <string name="touch_event">touch_event</string>
     <string name="qr">qr</string>
     <string name="screenshot">screenshot</string>
+    <string name="drag">drag</string>
 </resources>

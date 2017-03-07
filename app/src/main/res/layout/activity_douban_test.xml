@@ -12,12 +12,6 @@
         android:layout_centerHorizontal="true"
         android:gravity="center">
 
-        <Button
-            android:id="@+id/btn_start"
-            style="@style/MyBtnStyle"
-            android:text="@string/scan"
-            android:visibility="gone" />
-
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"

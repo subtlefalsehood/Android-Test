@@ -142,9 +142,14 @@ public class ScreenCaptureActivity extends Activity {
 
     private void showSuccess() {
         ContextUtils.showToast(getApplicationContext(), "扫描成功");
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(contentUri,"image/*");
+//        intent.setData(contentUri);
+        startActivity(intent);
         finish();
     }
 
+    private Uri contentUri;
     class SaveImageAsyncTask extends AsyncTask<Image, Void, Bitmap> {
 
         @Override
@@ -179,7 +184,7 @@ public class ScreenCaptureActivity extends Activity {
                     out.flush();
                     out.close();
                     Intent media = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                    Uri contentUri = Uri.fromFile(fileImage);
+                    contentUri = Uri.fromFile(fileImage);
                     media.setData(contentUri);
                     sendBroadcast(media);
                 } catch (Exception e) {

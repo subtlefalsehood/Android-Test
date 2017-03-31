@@ -14,6 +14,7 @@ import com.training.common.utlis.ContextUtils;
 import com.training.douban.MovieTestActivity;
 import com.training.mdtest.MDTestActivity;
 import com.training.network.activity.NetWorkTestActivity;
+import com.training.notification.NotificationListenActivity;
 import com.training.others.drag.DragTestActivity;
 import com.training.others.screenshot.FloatViewService;
 import com.training.service.activity.ServiceTestActivity;
@@ -25,14 +26,15 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements OnClickListener {
     @BindView(R.id.activity_main)
     LinearLayout layout;
-    Button[] buttons;
+    private Button[] buttons;
     private int[][] ids = {{R.id.btn_service, R.string.service},
             {R.id.btn_data, R.string.data,}, {R.id.btn_network, R.string.network}
             , {R.id.btn_douban, R.string.douban}, {R.id.btn_md, R.string.md}
 //            , {R.id.btn_touch_event, R.string.touch_event}
 //            , {R.id.btn_qr, R.string.qr}
-            , {R.id.btn_screenshot, R.string.screenshot}
+//            , {R.id.btn_screenshot, R.string.screenshot}
             , {R.id.btn_drag, R.string.drag}
+            , {R.id.btn_notification, R.string.notification_listen}
     };
 
     @Override
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         setupView();
     }
 
-    public void setupView() {
+    private void setupView() {
         buttons = new Button[ids.length];
         for (int i = 0; i < ids.length; i++) {
             buttons[i] = new Button(this);
@@ -87,6 +89,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 break;
             case R.id.btn_drag:
                 ContextUtils.jumpActivity(this, DragTestActivity.class, false);
+                break;
+            case R.id.btn_notification:
+                ContextUtils.jumpActivity(this, NotificationListenActivity.class, false);
                 break;
         }
     }

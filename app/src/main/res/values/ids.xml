@@ -10,4 +10,11 @@
     <item name="btn_qr" type="id" />
     <item name="btn_screenshot" type="id" />
     <item name="btn_drag" type="id" />
+    <item name="btn_notification" type="id" />
+    <item name="btn_show" type="id" />
+    <item name="btn_authorize" type="id" />
+    <item name="btn_list" type="id" />
+    <item name="btn_message" type="id" />
+    <item name="btn_open" type="id" />
+    <item name="btn_close" type="id" />
 </resources>

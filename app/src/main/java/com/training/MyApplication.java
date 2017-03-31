@@ -10,6 +10,7 @@ import com.training.network.utils.SystemUtils;
  */
 
 public class MyApplication extends Application {
+
     @Override
     public void onCreate() {
         Constant.DEVICE_ID = SystemUtils

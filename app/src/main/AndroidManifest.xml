@@ -11,7 +11,7 @@
 
     <application
         android:name=".MyApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -44,17 +44,30 @@
         <!-- 二维码扫描 -->
         <activity android:name=".others.qr.QRMainActivity" />
         <activity android:name=".others.qr.CustomScanActivity" />
-        <!--截屏-->
+        <!-- 截屏 -->
         <activity
             android:name=".others.screenshot.ScreenCaptureActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <!--拖拽-->
+        <!-- 拖拽 -->
         <activity android:name=".others.drag.DragTestActivity" />
 
         <service
             android:name=".others.screenshot.FloatViewService"
             android:enabled="true"
             android:exported="false" />
+
+        <activity android:name=".notification.NotificationListenActivity" />
+        <activity android:name=".notification.NotificationListActivity" />
+        <activity android:name=".notification.MessageListActivity" />
+
+        <service
+            android:name=".notification.NotificationMonitor"
+            android:label="@string/service_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

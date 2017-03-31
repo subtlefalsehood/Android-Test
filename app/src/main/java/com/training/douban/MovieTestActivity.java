@@ -1,14 +1,18 @@
 package com.training.douban;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.TextView;
 
+import com.training.BaseActivity;
 import com.training.R;
 import com.training.common.model.OnMultiTouchListener;
 import com.training.common.utlis.ContextUtils;
@@ -23,9 +27,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -34,27 +37,31 @@ import retrofit2.http.Query;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 
-public class MovieTestActivity extends AppCompatActivity implements DouBanAdapter.DoWhat {
+public class MovieTestActivity extends BaseActivity implements DouBanAdapter.DoWhat {
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     @BindView(R.id.rv)
     RecyclerView rv;
-
-    @BindView(R.id.title)
-    TextView title;
-
 
     @BindView(R.id.srl)
     SwipeRefreshLayout swipeLayout;
 
+    @BindView(R.id.fab)
+    FloatingActionButton floatingActionButton;
+
+    @BindView(R.id.activity_dou_ban_test)
+    DrawerLayout drawerLayout;
+
     private LinearLayoutManager linearLayoutManager;
     private DouBanAdapter adapter;
-    private boolean isInitSWL = false;
     private RpDBM250 rpDBM250;
     private List<Subject> rpList = new ArrayList<>();
+
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,12 +69,64 @@ public class MovieTestActivity extends AppCompatActivity implements DouBanAdapte
         setContentView(R.layout.activity_douban_test);
         ButterKnife.bind(this);
 
-        linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rv.setLayoutManager(linearLayoutManager);
-        adapter = new DouBanAdapter(this, rpList, this);
-        rv.setAdapter(adapter);
-        findViewById(R.id.ll).setOnTouchListener(new OnMultiTouchListener() {
+        dialog = new ProgressDialog(this);
+
+        initToolbar();
+        init();
+        initSwipeLayout();
+        initOriginalData();
+    }
+
+    @OnClick(R.id.fab)
+    void openDrawer() {
+        drawerLayout.openDrawer(Gravity.START);
+    }
+
+    private RpDBM250 addSubject(RpDBM250 rpDBM250Test) {
+        rpList.addAll(rpDBM250Test.getSubjects());
+        adapter.notifyDataSetChanged();
+        if (swipeLayout.isRefreshing()) {
+            swipeLayout.setRefreshing(false);
+        }
+        return rpDBM250Test;
+    }
+
+    private void initOriginalData() {
+        dialog.show();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(UrlContant.DOUBAN_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+
+        DouBanMovieService service = retrofit.create(MovieTestActivity.DouBanMovieService.class);
+        service.getMovieWithRx(0, 10)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<RpDBM250>() {
+                    @Override
+                    public void onCompleted() {
+                        dialog.hide();
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        ContextUtils.showToast(MovieTestActivity.this, throwable.getMessage());
+                        dialog.hide();
+                        swipeLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onNext(RpDBM250 rpDBM250Test) {
+                        setTitle(rpDBM250Test.getTitle());
+                        rpDBM250 = addSubject(rpDBM250Test);
+                    }
+                });
+    }
+
+    private void initToolbar() {
+        setSupportActionBar(toolbar);
+        toolbar.setOnTouchListener(new OnMultiTouchListener() {
             @Override
             public boolean onMultiTouch(int count) {
                 if (count == 2) {
@@ -77,99 +136,23 @@ public class MovieTestActivity extends AppCompatActivity implements DouBanAdapte
                 return false;
             }
         });
-
-        initSwipeLayout();
-        test1(0, 10);
+//        ActionBar actionBar = getSupportActionBar();
+//        if (actionBar != null) {
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//            actionBar.setHomeAsUpIndicator(R.drawable.ic_home_black_18dp);
+//            actionBar.setDefaultDisplayHomeAsUpEnabled(true);
+//        }
     }
 
-    @Override
-    public void onMovieItemClick(View v, int position) {
-        Intent intent = new Intent(this, WebActivity.class);
-        intent.putExtra("url", rpList.get(position).getAlt());
-        startActivity(intent);
+    private void init() {
+        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rv.setLayoutManager(linearLayoutManager);
+        adapter = new DouBanAdapter(this, rpList, this);
+        rv.setAdapter(adapter);
     }
 
     //test rx+retrofit
-    private interface DouBanMovieService {
-        @GET(DoubanUrl.DOUBAN_MOVIE_TOP250)
-        Observable<RpDBM250> getMovieWithRxJava(@Query("start") int start, @Query("count") int count);
-
-        @GET("/v2/movie/top250")
-        Call<RpDBM250> getMovieWithCall(@Query("start") int start, @Query("count") int count);
-    }
-
-    private void getDouBanMovieList(int start, int count) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.douban.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        DouBanMovieService douBanMovieService = retrofit.create(DouBanMovieService.class);
-        Call<RpDBM250> call = douBanMovieService.getMovieWithCall(start, count);
-        call.enqueue(new Callback<RpDBM250>() {
-            @Override
-            public void onResponse(Call<RpDBM250> call, Response<RpDBM250> response) {
-                if (response != null) {
-                    rpDBM250 = response.body();
-                    rpList.addAll(response.body().getSubjects());
-                    adapter.notifyDataSetChanged();
-                    if (!isInitSWL) {
-                        initSwipeLayout();
-                    } else {
-                        if (swipeLayout.isRefreshing()) {
-                            swipeLayout.setRefreshing(false);
-                        }
-                    }
-                    test(rpDBM250);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RpDBM250> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
-    }
-
-    private void test1(int start, int count) {
-        final Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(DoubanUrl.DOUBAN_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .build();
-        final DouBanMovieService serviceTest = retrofit.create(DouBanMovieService.class);
-        serviceTest.getMovieWithRxJava(start, count)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<RpDBM250>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        ContextUtils.showToast(MovieTestActivity.this, e.toString());
-                        swipeLayout.setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onNext(RpDBM250 rpDBM250Test) {
-                        rpDBM250 = rpDBM250Test;
-                        rpList.addAll(rpDBM250.getSubjects());
-                        adapter.notifyDataSetChanged();
-                        if (!isInitSWL) {
-                            isInitSWL = true;
-                            title.setText(rpDBM250.getTitle());
-                            title.setVisibility(View.VISIBLE);
-                        }
-                        if (swipeLayout.isRefreshing()) {
-                            swipeLayout.setRefreshing(false);
-                        }
-                    }
-                });
-    }
-
-
     private void initSwipeLayout() {
         swipeLayout.setRefreshing(true);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -199,28 +182,107 @@ public class MovieTestActivity extends AppCompatActivity implements DouBanAdapte
         });
     }
 
+    @Override
+    public void onMovieItemClick(View v, int position) {
+        Intent intent = new Intent(this, WebActivity.class);
+        intent.putExtra("url", rpList.get(position).getAlt());
+        startActivity(intent);
+    }
 
-    private void test(RpDBM250 rpDBM250) {
-        Observable.just(rpDBM250)
+    private interface DouBanMovieService {
+
+        @GET(UrlContant.DOUBAN_MOVIE_TOP250)
+        Observable<RpDBM250> getMovieWithRx(@Query("start") int start, @Query("count") int count);
+
+        @GET(UrlContant.DOUBAN_MOVIE_TOP250)
+        Call<RpDBM250> getMovieWithCall(@Query("start") int start, @Query("count") int count);
+
+    }
+
+
+    private void test1(int start, int count) {
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(UrlContant.DOUBAN_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+        final DouBanMovieService serviceTest = retrofit.create(DouBanMovieService.class);
+        serviceTest.getMovieWithRx(start, count)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .flatMap(new Func1<RpDBM250, Observable<String>>() {
+                .subscribe(new Subscriber<RpDBM250>() {
                     @Override
-                    public Observable<String> call(RpDBM250 rpDBM250) {
-                        return Observable.from(rpDBM250.getSubjects())
-                                .flatMap(new Func1<Subject, Observable<String>>() {
-                                    @Override
-                                    public Observable<String> call(Subject subject) {
-                                        return Observable.just(subject.getTitle());
-                                    }
-                                });
+                    public void onCompleted() {
+
                     }
-                })
-                .subscribe(new Action1<String>() {
+
                     @Override
-                    public void call(String s) {
-                        ContextUtils.showToast(MovieTestActivity.this, s);
+                    public void onError(Throwable e) {
+                        ContextUtils.showToast(MovieTestActivity.this, e.getMessage());
+                        swipeLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onNext(RpDBM250 rpDBM250Test) {
+                        rpDBM250 = addSubject(rpDBM250Test);
                     }
                 });
     }
+
+//
+//    private void getDouBanMovieList(int start, int count) {
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(UrlContant.DOUBAN_URL)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//        DouBanMovieService douBanMovieService = retrofit.create(DouBanMovieService.class);
+//        Call<RpDBM250> call = douBanMovieService.getMovieWithCall(start, count);
+//        call.enqueue(new Callback<RpDBM250>() {
+//            @Override
+//            public void onResponse(Call<RpDBM250> call, Response<RpDBM250> response) {
+//                if (response != null) {
+//                    rpDBM250 = response.body();
+//                    rpList.addAll(response.body().getSubjects());
+//                    adapter.notifyDataSetChanged();
+//                    if (!isInitSWL) {
+//                        initSwipeLayout();
+//                    } else {
+//                        if (swipeLayout.isRefreshing()) {
+//                            swipeLayout.setRefreshing(false);
+//                        }
+//                    }
+//                    test(rpDBM250);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<RpDBM250> call, Throwable t) {
+//                t.printStackTrace();
+//            }
+//        });
+//    }
+//
+//    private void test(RpDBM250 rpDBM250) {
+//        Observable.just(rpDBM250)
+//                .subscribeOn(Schedulers.computation())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .flatMap(new Func1<RpDBM250, Observable<String>>() {
+//                    @Override
+//                    public Observable<String> call(RpDBM250 rpDBM250) {
+//                        return Observable.from(rpDBM250.getSubjects())
+//                                .flatMap(new Func1<Subject, Observable<String>>() {
+//                                    @Override
+//                                    public Observable<String> call(Subject subject) {
+//                                        return Observable.just(subject.getTitle());
+//                                    }
+//                                });
+//                    }
+//                })
+//                .subscribe(new Action1<String>() {
+//                    @Override
+//                    public void call(String s) {
+//                        ContextUtils.showToast(MovieTestActivity.this, s);
+//                    }
+//                });
+//    }
 }

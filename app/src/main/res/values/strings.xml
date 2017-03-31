@@ -31,4 +31,18 @@
     <string name="qr">qr</string>
     <string name="screenshot">screenshot</string>
     <string name="drag">drag</string>
+    <string name="navigation_view_header_title">Mine</string>
+    <string name="service_name">training</string>
+    <string name="notification_listen">notification_listen</string>
+    <string name="show">show</string>
+    <string name="authorize">authorize</string>
+    <string name="list">list</string>
+    <string name="active_notification_count_zero">no_notification</string>
+    <string name="message">message</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
+    <plurals name="active_notification_count_nonzero">
+        <item quantity="one">%d active notification</item>
+        <item quantity="other">%d active notifications</item>
+    </plurals>
 </resources>

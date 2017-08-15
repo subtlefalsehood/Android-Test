@@ -12,10 +12,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
 
+import com.subtlefalsehood.base.utils.ContextUtils;
 import com.training.BaseActivity;
 import com.training.R;
 import com.training.common.model.OnMultiTouchListener;
-import com.training.common.utlis.ContextUtils;
 import com.training.douban.model.DouBanAdapter;
 import com.training.network.activity.WebActivity;
 import com.training.network.model.EndlessRecyclerOnScrollListener;
@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -67,7 +66,6 @@ public class MovieTestActivity extends BaseActivity implements DouBanAdapter.DoW
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_douban_test);
-        ButterKnife.bind(this);
 
         dialog = new ProgressDialog(this);
 
@@ -228,6 +226,7 @@ public class MovieTestActivity extends BaseActivity implements DouBanAdapter.DoW
                     }
                 });
     }
+
 
 //
 //    private void getDouBanMovieList(int start, int count) {

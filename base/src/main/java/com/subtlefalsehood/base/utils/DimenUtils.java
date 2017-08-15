@@ -1,4 +1,4 @@
-package com.training.common.utlis;
+package com.subtlefalsehood.base.utils;
 
 import android.content.Context;
 import android.util.TypedValue;

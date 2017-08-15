@@ -30,7 +30,7 @@
                 android:layout_height="200dp"
                 android:layout_centerInParent="true" />
         </RelativeLayout>
-        <com.training.LinePieView
+        <com.training.common.view.LinePieView
             android:layout_width="match_parent"
             android:layout_height="200dp" />
     </LinearLayout>

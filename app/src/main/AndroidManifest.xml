@@ -38,8 +38,8 @@
         <activity android:name=".douban.MovieTestActivity" />
         <activity android:name=".network.activity.WebActivity" />
         <activity android:name=".mdtest.MDTestActivity" />
-        <activity android:name=".EChartsTestActivity" />
-        <activity android:name=".TouchEventActivity" />
+        <activity android:name=".echart.EChartsTestActivity" />
+        <activity android:name=".touch.TouchEventActivity" />
 
         <!-- 二维码扫描 -->
         <activity android:name=".others.qr.QRMainActivity" />

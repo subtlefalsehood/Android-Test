@@ -1,4 +1,4 @@
-package com.training.common.utlis;
+package com.subtlefalsehood.base.utils;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -51,7 +51,7 @@ public class ContextUtils {
         Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
     }
 
-    public static void showSnack(View layout,String content) {
+    public static void showSnack(View layout, String content) {
         Snackbar.make(layout, content, Snackbar.LENGTH_LONG).show();
     }
 }

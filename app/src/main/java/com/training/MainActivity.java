@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
-import com.training.common.utlis.ContextUtils;
+import com.subtlefalsehood.base.utils.ContextUtils;
 import com.training.douban.MovieTestActivity;
 import com.training.mdtest.MDTestActivity;
 import com.training.network.activity.NetWorkTestActivity;
@@ -19,9 +19,9 @@ import com.training.others.drag.DragTestActivity;
 import com.training.others.screenshot.FloatViewService;
 import com.training.service.activity.ServiceTestActivity;
 import com.training.storage.activity.DataTestActivity;
+import com.training.touch.TouchEventActivity;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
     @BindView(R.id.activity_main)
@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
         setupView();
     }
 

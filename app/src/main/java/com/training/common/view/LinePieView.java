@@ -1,4 +1,4 @@
-package com.training;
+package com.training.common.view;
 
 import android.content.Context;
 import android.graphics.Canvas;

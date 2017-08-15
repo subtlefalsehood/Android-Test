@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.subtlefalsehood.base.utils.ContextUtils;
 import com.training.R;
-import com.training.common.utlis.ContextUtils;
 import com.training.storage.model.MyDatabaseOpenHelp;
 import com.training.storage.model.SQLiteInfo;
 import com.training.storage.utils.SQLUtils;

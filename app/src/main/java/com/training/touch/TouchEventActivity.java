@@ -1,9 +1,11 @@
-package com.training;
+package com.training.touch;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
+
+import com.training.R;
 
 public class TouchEventActivity extends AppCompatActivity {
     private String TAG = "TouchEventActivity";

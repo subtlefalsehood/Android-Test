@@ -1,4 +1,4 @@
-package com.training;
+package com.training.touch;
 
 import android.view.MotionEvent;
 

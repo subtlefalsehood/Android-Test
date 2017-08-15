@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Set;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 /**
@@ -51,7 +50,6 @@ public class NotificationListActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        ButterKnife.bind(this);
 
         infoBroadCast = new InfoBroadCast();
         IntentFilter filter = new IntentFilter(ACTION_GETDATA_FROM_DB);
@@ -63,14 +61,14 @@ public class NotificationListActivity extends BaseActivity {
 
 
     private void initView() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(aContext);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         RecyclerView.Adapter<MyViewHolder> viewHolderAdapter = new RecyclerView.Adapter<MyViewHolder>() {
             @Override
             public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                View itemView = LayoutInflater.from(aContext).inflate(R.layout.item_layout, null);
+                View itemView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_layout, null);
                 return new MyViewHolder(itemView);
             }
 

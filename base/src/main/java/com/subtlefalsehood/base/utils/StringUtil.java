@@ -1,4 +1,4 @@
-package com.training.common.utlis;
+package com.subtlefalsehood.base.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

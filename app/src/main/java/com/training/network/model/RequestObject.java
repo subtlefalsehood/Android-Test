@@ -1,6 +1,6 @@
 package com.training.network.model;
 
-import com.training.common.utlis.StringUtil;
+import com.subtlefalsehood.base.utils.StringUtil;
 import com.training.network.Constant;
 
 import java.io.Serializable;

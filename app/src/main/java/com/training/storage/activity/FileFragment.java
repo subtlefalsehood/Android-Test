@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.subtlefalsehood.base.utils.ContextUtils;
 import com.training.R;
-import com.training.common.utlis.ContextUtils;
 import com.training.storage.model.RecipeInfo;
 
 import org.xmlpull.v1.XmlPullParser;

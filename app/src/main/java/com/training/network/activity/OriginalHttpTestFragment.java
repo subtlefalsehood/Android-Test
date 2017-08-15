@@ -13,8 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
+import com.subtlefalsehood.base.utils.StringUtil;
 import com.training.R;
-import com.training.common.utlis.StringUtil;
 import com.training.network.Constant;
 import com.training.network.model.BirdResponse;
 import com.training.network.model.RequestObject;

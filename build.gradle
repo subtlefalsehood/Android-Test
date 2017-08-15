@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:2.3.1'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -26,13 +26,13 @@ task clean(type: Delete) {
 
 ext{
     minSdkVersion = 21
-    targetSdkVersion = 24
-    compileSdkVersion = 24
-    buildToolsVersion = '25.0.0'
+    targetSdkVersion = 26
+    compileSdkVersion = 26
+    buildToolsVersion = '25.0.2'
 
-    supportLibraryVersion = '23.4.0'
+    supportLibraryVersion = '25.3.1'
 
     loggerVersion = '1.15'
-    butterknifeVersion = '8.4.0'
-    retrofitVerision = '2.2.0'
+    butterknifeVersion = '8.8.1'
+    retrofitVerision = '2.3.0'
 }

@@ -21,8 +21,8 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.subtlefalsehood.base.utils.ContextUtils;
 import com.training.R;
-import com.training.common.utlis.ContextUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;

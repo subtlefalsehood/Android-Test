@@ -1,4 +1,4 @@
-package com.training;
+package com.training.echart;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -27,6 +27,7 @@ import com.github.abel533.echarts.series.Bar;
 import com.github.abel533.echarts.series.Line;
 import com.github.abel533.echarts.series.Pie;
 import com.orhanobut.logger.Logger;
+import com.training.R;
 
 /**
  * Created by chenqiuyi on 17/1/11.

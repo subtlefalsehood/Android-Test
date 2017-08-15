@@ -13,8 +13,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.subtlefalsehood.base.utils.DimenUtils;
 import com.training.R;
-import com.training.common.utlis.DimenUtils;
 
 public class FloatViewService extends Service {
     private WindowManager.LayoutParams layoutParams;

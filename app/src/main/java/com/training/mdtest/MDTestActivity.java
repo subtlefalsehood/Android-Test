@@ -9,8 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.subtlefalsehood.base.utils.ContextUtils;
 import com.training.R;
-import com.training.common.utlis.ContextUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
@@ -50,6 +51,7 @@ public class NotificationListActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+        mKnife = ButterKnife.bind(this);
 
         infoBroadCast = new InfoBroadCast();
         IntentFilter filter = new IntentFilter(ACTION_GETDATA_FROM_DB);

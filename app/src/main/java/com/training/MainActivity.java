@@ -2,7 +2,6 @@ package com.training;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
 import com.subtlefalsehood.base.utils.ContextUtils;
-import com.training.douban.MovieTestActivity;
+import com.training.douban.MovieActivity;
 import com.training.mdtest.MDTestActivity;
 import com.training.network.activity.NetWorkTestActivity;
 import com.training.notification.NotificationListenActivity;
@@ -22,8 +21,9 @@ import com.training.storage.activity.DataTestActivity;
 import com.training.touch.TouchEventActivity;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements OnClickListener {
+public class MainActivity extends BaseActivity implements OnClickListener {
     @BindView(R.id.activity_main)
     LinearLayout layout;
     private Button[] buttons;
@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mKnife = ButterKnife.bind(this);
         setupView();
     }
 
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 ContextUtils.jumpActivity(this, NetWorkTestActivity.class, false);
                 break;
             case R.id.btn_douban:
-                ContextUtils.jumpActivity(this, MovieTestActivity.class, false);
+                ContextUtils.jumpActivity(this, MovieActivity.class, false);
                 break;
             case R.id.btn_md:
                 ContextUtils.jumpActivity(this, MDTestActivity.class, false);

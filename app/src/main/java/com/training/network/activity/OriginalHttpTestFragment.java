@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.orhanobut.logger.Logger;
 import com.subtlefalsehood.base.utils.StringUtil;
 import com.training.R;
-import com.training.network.Constant;
+import com.training.network.consts.UrlConstant;
 import com.training.network.model.BirdResponse;
 import com.training.network.model.RequestObject;
 import com.training.network.model.ResponseObject;
@@ -76,7 +76,7 @@ public class OriginalHttpTestFragment extends Fragment {
     @OnClick(R.id.btn_get)
     void clickGet() {
         RqItem rqItem = new RqItem();
-        MyAsyncTask myAsyncTask = new MyAsyncTask(GET, Constant.HTTP_URL + Constant.BIRD_CONFIG_URL);
+        MyAsyncTask myAsyncTask = new MyAsyncTask(GET, UrlConstant.HTTP_URL + UrlConstant.BIRD_CONFIG_URL);
         myAsyncTask.execute();
     }
 
@@ -102,7 +102,7 @@ public class OriginalHttpTestFragment extends Fragment {
 
 
     private void login(String username, String password) {
-        MyAsyncTask myAsyncTask = new MyAsyncTask(POST, Constant.HTTP_URL + Constant.LOGIN_URL);
+        MyAsyncTask myAsyncTask = new MyAsyncTask(POST, UrlConstant.HTTP_URL + UrlConstant.LOGIN_URL);
         myAsyncTask.execute();
     }
 

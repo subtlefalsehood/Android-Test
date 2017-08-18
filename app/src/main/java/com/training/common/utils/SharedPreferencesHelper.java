@@ -1,4 +1,4 @@
-package com.subtlefalsehood.base.utils;
+package com.training.common.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

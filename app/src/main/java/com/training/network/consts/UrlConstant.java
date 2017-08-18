@@ -1,10 +1,10 @@
-package com.training.network;
+package com.training.network.consts;
 
 /**
  * Created by chenqiuyi on 16/12/8.
  */
 
-public class Constant {
+public class UrlConstant {
     public static String HTTP_URL = "http://192.168.88.68/eye/";// 测试地址
 //    public static final String HTTP_URL = "http://eyemiserver.criwell.com/eye/";
     public static final String LOGIN_URL = "v2.0/user/get";

@@ -39,5 +39,8 @@ dependencies {
     compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVerision"
     compile "com.squareup.retrofit2:retrofit-adapters:$rootProject.retrofitVerision"
     compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.retrofitVerision"
+
+    //eventbus
+    compile 'org.greenrobot:eventbus:3.0.0'
     testCompile 'junit:junit:4.12'
 }

@@ -18,6 +18,7 @@ import com.training.BaseActivity;
 import com.training.R;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class NotificationListenActivity extends BaseActivity implements View.OnClickListener {
     private static final int EVENT_SHOW_CREATE_NOS = 0;
@@ -43,6 +44,7 @@ public class NotificationListenActivity extends BaseActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mKnife = ButterKnife.bind(this);
         setupView();
 //        toggleNotificationListenerService(getApplicationContext());
     }

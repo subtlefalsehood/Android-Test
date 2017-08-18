@@ -1,7 +1,7 @@
 package com.training.network.model;
 
 import com.subtlefalsehood.base.utils.StringUtil;
-import com.training.network.Constant;
+import com.training.network.consts.UrlConstant;
 
 import java.io.Serializable;
 
@@ -12,8 +12,8 @@ public class RequestObject implements Serializable{
 
     public RequestObject(String cmd) {
         this.cmd = cmd;
-        if(!StringUtil.isBlank(Constant.DEVICE_ID)){
-            this.mac = Constant.DEVICE_ID;
+        if(!StringUtil.isBlank(UrlConstant.DEVICE_ID)){
+            this.mac = UrlConstant.DEVICE_ID;
         }else {
             this.mac = "criwell-unget-device-id";
         }

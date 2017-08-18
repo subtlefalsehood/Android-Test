@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by chenqiuyi on 17/3/14.
@@ -46,6 +47,7 @@ public class MessageListActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+        mKnife = ButterKnife.bind(this);
 
         mNotificationManager = MyNotificationManager.getInstance(this);
         messageMap = mNotificationManager.getMessageInfos();

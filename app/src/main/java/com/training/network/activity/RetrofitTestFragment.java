@@ -17,7 +17,7 @@ import com.google.gson.reflect.TypeToken;
 import com.orhanobut.logger.Logger;
 import com.subtlefalsehood.base.utils.StringUtil;
 import com.training.R;
-import com.training.network.Constant;
+import com.training.network.consts.UrlConstant;
 import com.training.network.model.ResponseObject;
 import com.training.network.model.ResponseRetrofit;
 import com.training.network.model.RpRetrofitBird;
@@ -109,10 +109,10 @@ public class RetrofitTestFragment extends Fragment {
     }
 
     public interface ResponseService {
-        @GET(Constant.BIRD_CONFIG_URL)
+        @GET(UrlConstant.BIRD_CONFIG_URL)
         Call<ResponseRetrofit<List<RpRetrofitBird>>> getBase();
 
-        @POST(Constant.LOGIN_URL)
+        @POST(UrlConstant.LOGIN_URL)
         Call<ResponseObject> postLogin(@Body RqLogin rqLogin);
     }
 
@@ -124,7 +124,7 @@ public class RetrofitTestFragment extends Fragment {
                 .addConverterFactory(new PostConverterFactory(new Gson()).create())
 //                .addConverterFactory(GsonConverterFactory.create())
 //                .client(builder.build())
-                .baseUrl(Constant.HTTP_URL)
+                .baseUrl(UrlConstant.HTTP_URL)
                 .build();
         ResponseService loginService = retrofit.create(ResponseService.class);
         RqLogin rqLogin = new RqLogin();
@@ -156,7 +156,7 @@ public class RetrofitTestFragment extends Fragment {
     private void doGet() {
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(Constant.HTTP_URL)
+                .baseUrl(UrlConstant.HTTP_URL)
                 .build();
         ResponseService responseService = retrofit.create(ResponseService.class);
         Call<ResponseRetrofit<List<RpRetrofitBird>>> call = responseService.getBase();

@@ -1,6 +1,6 @@
 package com.training.network.model;
 
-import com.training.network.Constant;
+import com.training.network.consts.UrlConstant;
 
 public class RqLogin extends RequestObject {
     private String phoneNum;
@@ -10,7 +10,7 @@ public class RqLogin extends RequestObject {
     private String openId;
 
     public RqLogin() {
-        super(Constant.LOGIN_URL);
+        super(UrlConstant.LOGIN_URL);
     }
 
     public String getPhoneNum() {

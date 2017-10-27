@@ -1,5 +1,13 @@
 apply plugin: 'com.android.library'
+//这句在基础库中依赖没有用，要在使用的库中引入
 //apply plugin: 'android-apt'
+
+ext{
+    supportLibraryVersion = '25.3.1'
+    loggerVersion = '1.15'
+    butterknifeVersion = '8.8.1'
+    retrofitVerision = '2.3.0'
+}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -23,24 +31,27 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
-    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
-    compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
-    compile "com.android.support:design:$rootProject.supportLibraryVersion"
+    compile "com.android.support:support-v4:$supportLibraryVersion"
+    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
+    compile "com.android.support:design:$supportLibraryVersion"
 
     //Logger
-    compile "com.orhanobut:logger:$rootProject.loggerVersion"
+    compile "com.orhanobut:logger:$loggerVersion"
     //butterknife
-    compile "com.jakewharton:butterknife:$rootProject.butterknifeVersion"
-    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion"
+    compile "com.jakewharton:butterknife:$butterknifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknifeVersion"
+    //这句在基础库中依赖没有用，要在使用的库中引入
 //    apt "com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion"
     //retrofit2.0
-    compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVerision"
-    compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVerision"
-    compile "com.squareup.retrofit2:retrofit-adapters:$rootProject.retrofitVerision"
-    compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.retrofitVerision"
-
+    compile "com.squareup.retrofit2:retrofit:$retrofitVerision"
+    compile "com.squareup.retrofit2:converter-gson:$retrofitVerision"
+    compile "com.squareup.retrofit2:retrofit-adapters:$retrofitVerision"
+    compile "com.squareup.retrofit2:adapter-rxjava:$retrofitVerision"
     //eventbus
     compile 'org.greenrobot:eventbus:3.0.0'
+    //recyclerview适配器
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.27'
+
     testCompile 'junit:junit:4.12'
 }

@@ -1,4 +1,4 @@
-package com.training.network.model;
+package com.training.network.model.data;
 
 import java.util.List;
 

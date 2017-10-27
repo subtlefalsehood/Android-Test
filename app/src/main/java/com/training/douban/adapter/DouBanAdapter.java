@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.training.R;
-import com.training.network.model.RpDBM250;
+import com.training.network.model.data.RpDBM250;
 
 import java.util.ArrayList;
 import java.util.List;

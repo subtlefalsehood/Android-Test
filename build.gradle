@@ -29,10 +29,10 @@ ext{
     targetSdkVersion = 26
     compileSdkVersion = 26
     buildToolsVersion = '25.0.2'
+//
+//    supportLibraryVersion = '25.3.1'
 
-    supportLibraryVersion = '25.3.1'
-
-    loggerVersion = '1.15'
+//    loggerVersion = '1.15'
     butterknifeVersion = '8.8.1'
-    retrofitVerision = '2.3.0'
+//    retrofitVerision = '2.3.0'
 }

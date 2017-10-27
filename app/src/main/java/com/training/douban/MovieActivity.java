@@ -17,10 +17,10 @@ import com.training.DouBanEvent;
 import com.training.R;
 import com.training.common.model.OnMultiTouchListener;
 import com.training.douban.adapter.DouBanAdapter;
-import com.training.network.DouBanManager;
+import com.training.network.DouBanModel;
 import com.training.network.activity.WebActivity;
 import com.training.network.model.EndlessRecyclerOnScrollListener;
-import com.training.network.model.RpDBM250;
+import com.training.network.model.data.RpDBM250;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -49,7 +49,7 @@ public class MovieActivity extends BaseActivity implements DouBanAdapter.OnItemC
 
     private LinearLayoutManager mLinearLayoutManager;
     private DouBanAdapter mAdapter;
-    private DouBanManager mManager;
+    private DouBanModel mManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,12 +57,12 @@ public class MovieActivity extends BaseActivity implements DouBanAdapter.OnItemC
         setContentView(R.layout.activity_douban_test);
         EventBus.getDefault().register(this);
         mKnife = ButterKnife.bind(this);
-        mManager = DouBanManager.getInstance();
+        mManager = DouBanModel.getInstance();
 
         initToolbar();
         initView();
         initSwipeLayout();
-        requestData(0, DouBanManager.DEFAULT_ONCE_REQUEST_COUNT);
+        requestData(0, DouBanModel.DEFAULT_ONCE_REQUEST_COUNT);
     }
 
     private void requestData(int start, int count) {
@@ -101,16 +101,14 @@ public class MovieActivity extends BaseActivity implements DouBanAdapter.OnItemC
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                showLoading();
-                requestData(0, DouBanManager.DEFAULT_ONCE_REQUEST_COUNT);
+                requestData(0, DouBanModel.DEFAULT_ONCE_REQUEST_COUNT);
             }
         });
         mRecyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(mLinearLayoutManager) {
             @Override
-            public void onLoadMore(int currentPage) {
-                if (mAdapter.getRpList().size() <= 250) {
-                    showLoading();
-                    requestData(mAdapter.getStart(), DouBanManager.DEFAULT_ONCE_REQUEST_COUNT);
+            public void onLoadMore() {
+                if (mAdapter.getRpList().size() < 250) {
+                    requestData(mAdapter.getStart(), DouBanModel.DEFAULT_ONCE_REQUEST_COUNT);
                 } else {
                     ContextUtils.showSnack(mRecyclerView, "到底了-V-");
                 }
@@ -141,6 +139,9 @@ public class MovieActivity extends BaseActivity implements DouBanAdapter.OnItemC
     public void onMessageEvent(DouBanEvent event) {
         if (event != null) {
             switch (event.getMessage()) {
+                case DouBanEvent.TOP250_MOVIES_START:
+                    showLoading();
+                    break;
                 case DouBanEvent.TOP250_MOVIES_SUCCESS:
                     hideLoading();
                     handlerData(event);

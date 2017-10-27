@@ -30,7 +30,7 @@ public class ContextUtils {
         transaction.commit();
     }
 
-    public static void jumpActivity(Context context, Class cls, boolean isFinish) {
+    public static void startActivity(Context context, Class cls, boolean isFinish) {
         Intent intent = new Intent(context, cls);
         if (isFinish) {
             context.startActivity(intent);

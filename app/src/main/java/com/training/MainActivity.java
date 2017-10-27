@@ -14,7 +14,6 @@ import com.training.douban.MovieActivity;
 import com.training.mdtest.MDTestActivity;
 import com.training.network.activity.NetWorkTestActivity;
 import com.training.notification.NotificationListenActivity;
-import com.training.others.drag.DragTestActivity;
 import com.training.others.screenshot.FloatViewService;
 import com.training.service.activity.ServiceTestActivity;
 import com.training.storage.activity.DataTestActivity;
@@ -64,22 +63,22 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_service:
-                ContextUtils.jumpActivity(this, ServiceTestActivity.class, false);
+                ContextUtils.startActivity(this, ServiceTestActivity.class, false);
                 break;
             case R.id.btn_data:
-                ContextUtils.jumpActivity(this, DataTestActivity.class, false);
+                ContextUtils.startActivity(this, DataTestActivity.class, false);
                 break;
             case R.id.btn_network:
-                ContextUtils.jumpActivity(this, NetWorkTestActivity.class, false);
+                ContextUtils.startActivity(this, NetWorkTestActivity.class, false);
                 break;
             case R.id.btn_douban:
-                ContextUtils.jumpActivity(this, MovieActivity.class, false);
+                ContextUtils.startActivity(this, MovieActivity.class, false);
                 break;
             case R.id.btn_md:
-                ContextUtils.jumpActivity(this, MDTestActivity.class, false);
+                ContextUtils.startActivity(this, MDTestActivity.class, false);
                 break;
             case R.id.btn_touch_event:
-                ContextUtils.jumpActivity(this, TouchEventActivity.class, false);
+                ContextUtils.startActivity(this, TouchEventActivity.class, false);
                 break;
             case R.id.btn_screenshot:
                 if (!isStartFloat) {
@@ -88,10 +87,11 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                 }
                 break;
             case R.id.btn_drag:
-                ContextUtils.jumpActivity(this, DragTestActivity.class, false);
+//                overridePendingTransition(0, 0);
+                ContextUtils.startActivity(this, MDTestActivity.class, false);
                 break;
             case R.id.btn_notification:
-                ContextUtils.jumpActivity(this, NotificationListenActivity.class, false);
+                ContextUtils.startActivity(this, NotificationListenActivity.class, false);
                 break;
         }
     }

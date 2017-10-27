@@ -85,13 +85,13 @@ public class NotificationListenActivity extends BaseActivity implements View.OnC
                 break;
             case R.id.btn_list:
                 if (isEnabled()) {
-                    ContextUtils.jumpActivity(this, NotificationListActivity.class, false);
+                    ContextUtils.startActivity(this, NotificationListActivity.class, false);
                 } else {
                     jumpAuthorization();
                 }
                 break;
             case R.id.btn_message:
-                ContextUtils.jumpActivity(this, MessageListActivity.class, false);
+                ContextUtils.startActivity(this, MessageListActivity.class, false);
                 break;
             case R.id.btn_open:
                 sendListen(true);

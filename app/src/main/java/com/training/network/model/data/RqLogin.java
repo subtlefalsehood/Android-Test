@@ -1,6 +1,7 @@
-package com.training.network.model;
+package com.training.network.model.data;
 
 import com.training.network.consts.UrlConstant;
+import com.training.network.model.RequestObject;
 
 public class RqLogin extends RequestObject {
     private String phoneNum;

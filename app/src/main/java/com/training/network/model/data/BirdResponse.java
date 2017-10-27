@@ -1,10 +1,14 @@
-package com.training.network.model;
+package com.training.network.model.data;
+
+import java.io.Serializable;
 
 /**
  * Created by chenqiuyi on 16/12/19.
  */
 
-public class RpRetrofitBird {
+public class BirdResponse implements Serializable{
+
+
     /**
      * resourceKey : no1
      * conditionKey : ecsmcm553pntivm2

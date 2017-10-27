@@ -1,4 +1,6 @@
-package com.training.network.model;
+package com.training.network.model.data;
+
+import com.training.network.model.RequestObject;
 
 /**
  * Created by chenqiuyi on 16/12/8.

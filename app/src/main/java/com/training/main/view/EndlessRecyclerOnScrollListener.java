@@ -1,4 +1,4 @@
-package com.training.network.model;
+package com.training.main.view;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;

@@ -21,7 +21,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.subtlefalsehood.base.utils.ContextUtils;
+import com.subtlefalsehood.base.utils.JumpUtils;
 import com.training.R;
 
 import java.io.File;
@@ -131,17 +131,17 @@ public class ScreenCaptureActivity extends Activity {
     }
 
     private void showError() {
-        ContextUtils.showToast(getApplicationContext(), "扫描失败");
+        JumpUtils.showToast(getApplicationContext(), "扫描失败");
         finish();
     }
 
     private void showError(String message) {
-        ContextUtils.showToast(getApplicationContext(), "扫描失败:" + message);
+        JumpUtils.showToast(getApplicationContext(), "扫描失败:" + message);
         finish();
     }
 
     private void showSuccess() {
-        ContextUtils.showToast(getApplicationContext(), "扫描成功");
+        JumpUtils.showToast(getApplicationContext(), "扫描成功");
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(contentUri,"image/*");
 //        intent.setData(contentUri);
@@ -188,7 +188,7 @@ public class ScreenCaptureActivity extends Activity {
                     media.setData(contentUri);
                     sendBroadcast(media);
                 } catch (Exception e) {
-                    ContextUtils.showToast(getApplicationContext(), "文件错误");
+                    JumpUtils.showToast(getApplicationContext(), "文件错误");
                     e.printStackTrace();
                     fileImage = null;
                 }

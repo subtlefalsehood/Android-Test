@@ -11,27 +11,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
 
-import com.subtlefalsehood.base.utils.ContextUtils;
+import com.subtlefalsehood.base.utils.JumpUtils;
 import com.training.BaseActivity;
-import com.training.DouBanEvent;
 import com.training.R;
 import com.training.common.model.OnMultiTouchListener;
 import com.training.douban.adapter.DouBanAdapter;
-import com.training.network.DouBanModel;
+import com.training.main.model.DoubanMovieBean;
+import com.training.main.view.EndlessRecyclerOnScrollListener;
 import com.training.network.activity.WebActivity;
-import com.training.network.model.EndlessRecyclerOnScrollListener;
-import com.training.network.model.data.RpDBM250;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class MovieActivity extends BaseActivity implements DouBanAdapter.OnItemClickListener {
+public class MovieActivity extends BaseActivity implements DouBanAdapter.OnItemClickListener, DoubanContrack.View {
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
@@ -49,25 +43,24 @@ public class MovieActivity extends BaseActivity implements DouBanAdapter.OnItemC
 
     private LinearLayoutManager mLinearLayoutManager;
     private DouBanAdapter mAdapter;
-    private DouBanModel mManager;
+
+
+    private DoubanContrack.Presenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_douban_test);
-        EventBus.getDefault().register(this);
         mKnife = ButterKnife.bind(this);
-        mManager = DouBanModel.getInstance();
 
         initToolbar();
         initView();
         initSwipeLayout();
-        requestData(0, DouBanModel.DEFAULT_ONCE_REQUEST_COUNT);
+
+        mPresenter = new DoubanMoviePresenterImpl(this, this);
+        mPresenter.subscribe();
     }
 
-    private void requestData(int start, int count) {
-        mManager.requestMovie(start, count);
-    }
 
     @OnClick(R.id.fab)
     public void openDrawer() {
@@ -101,30 +94,43 @@ public class MovieActivity extends BaseActivity implements DouBanAdapter.OnItemC
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                requestData(0, DouBanModel.DEFAULT_ONCE_REQUEST_COUNT);
+                mPresenter.requestMovie(0, DoubanNetControler.DEFAULT_ONCE_REQUEST_COUNT);
             }
         });
         mRecyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(mLinearLayoutManager) {
             @Override
             public void onLoadMore() {
                 if (mAdapter.getRpList().size() < 250) {
-                    requestData(mAdapter.getStart(), DouBanModel.DEFAULT_ONCE_REQUEST_COUNT);
+                    mPresenter.requestMovie(mAdapter.getStart(), DoubanNetControler.DEFAULT_ONCE_REQUEST_COUNT);
                 } else {
-                    ContextUtils.showSnack(mRecyclerView, "到底了-V-");
+                    JumpUtils.showSnack(mRecyclerView, "到底了-V-");
                 }
             }
         });
     }
 
-    private void showLoading() {
+    @Override
+    public void showLoading() {
         if (mSwipeLayout != null && !mSwipeLayout.isRefreshing()) {
             mSwipeLayout.setRefreshing(true);
         }
     }
 
-    private void hideLoading() {
+    @Override
+    public void hideLoading() {
         if (mSwipeLayout != null && mSwipeLayout.isRefreshing()) {
             mSwipeLayout.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void updateView(DoubanMovieBean doubanMovieBean) {
+        if (doubanMovieBean != null) {
+            if (doubanMovieBean.getStart() == 0) {
+                mAdapter.setRpList(doubanMovieBean.getSubjects());
+            } else {
+                mAdapter.addRpList(doubanMovieBean.getSubjects());
+            }
         }
     }
 
@@ -135,39 +141,17 @@ public class MovieActivity extends BaseActivity implements DouBanAdapter.OnItemC
         startActivity(intent);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(DouBanEvent event) {
-        if (event != null) {
-            switch (event.getMessage()) {
-                case DouBanEvent.TOP250_MOVIES_START:
-                    showLoading();
-                    break;
-                case DouBanEvent.TOP250_MOVIES_SUCCESS:
-                    hideLoading();
-                    handlerData(event);
-                    break;
-                case DouBanEvent.TOP250_MOVIES_ERROR:
-                    hideLoading();
-                    break;
-            }
-        }
-    }
-
-    private void handlerData(DouBanEvent event) {
-        if (event.getData() != null && event.getData() instanceof RpDBM250) {
-            RpDBM250 rpDBM250 = (RpDBM250) event.getData();
-            if (rpDBM250.getStart() == 0) {
-                mAdapter.setRpList(rpDBM250.getSubjects());
-            } else {
-                mAdapter.addRpList(rpDBM250.getSubjects());
-            }
-        }
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
-        mManager.destroy();
+        if (mPresenter != null) {
+            mPresenter.unSubscribe();
+        }
+    }
+
+
+    @Override
+    public void setPresenter(DoubanContrack.Presenter presenter) {
+        mPresenter = presenter;
     }
 }

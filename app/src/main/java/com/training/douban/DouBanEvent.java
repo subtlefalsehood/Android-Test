@@ -1,4 +1,4 @@
-package com.training;
+package com.training.douban;
 
 /**
  * Created by chenqiuyi on 17/8/17.

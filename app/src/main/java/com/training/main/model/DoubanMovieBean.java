@@ -1,4 +1,4 @@
-package com.training.network.model.data;
+package com.training.main.model;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import java.util.List;
  * Created by chenqiuyi on 16/12/22.
  */
 
-public class RpDBM250 {
+public class DoubanMovieBean {
     private int start;
     private int count;
     private int total;

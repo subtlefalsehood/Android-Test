@@ -9,9 +9,9 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 import com.training.R;
-import com.training.network.model.data.RpDBM250;
+import com.training.main.model.DoubanMovieBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,18 +26,18 @@ public class DouBanAdapter extends RecyclerView.Adapter<DouBanAdapter.DBHolder> 
     }
 
     private Context context;
-    private List<RpDBM250.Subject> mRpList = new ArrayList<RpDBM250.Subject>();
+    private List<DoubanMovieBean.Subject> mRpList = new ArrayList<DoubanMovieBean.Subject>();
     private OnItemClickListener mItemClickListener;
 
     public DouBanAdapter(Context context) {
         this.context = context;
     }
 
-    public List<RpDBM250.Subject> getRpList() {
+    public List<DoubanMovieBean.Subject> getRpList() {
         return mRpList;
     }
 
-    public void setRpList(List<RpDBM250.Subject> rpList) {
+    public void setRpList(List<DoubanMovieBean.Subject> rpList) {
         if (rpList != null) {
             mRpList.clear();
             mRpList.addAll(rpList);
@@ -45,7 +45,7 @@ public class DouBanAdapter extends RecyclerView.Adapter<DouBanAdapter.DBHolder> 
         notifyDataSetChanged();
     }
 
-    public void addRpList(List<RpDBM250.Subject> rpList) {
+    public void addRpList(List<DoubanMovieBean.Subject> rpList) {
         int oldLength = mRpList.size();
         if (rpList != null) {
             mRpList.addAll(rpList);
@@ -80,9 +80,9 @@ public class DouBanAdapter extends RecyclerView.Adapter<DouBanAdapter.DBHolder> 
 
     @Override
     public void onBindViewHolder(DBHolder holder, int position) {
-        RpDBM250.Subject subject = mRpList.get(position);
+        DoubanMovieBean.Subject subject = mRpList.get(position);
         holder.textView.setText(subject.getTitle());
-        Picasso.with(context)
+        Glide.with(context)
                 .load(subject.getImages().getLarge())
                 .into(holder.imageView);
         holder.origin_title.setText(subject.getOriginal_title());
@@ -115,13 +115,6 @@ public class DouBanAdapter extends RecyclerView.Adapter<DouBanAdapter.DBHolder> 
         DBHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
-//            imageView = (ImageView) itemView.findViewById(R.id.img_movie);
-//            textView = (TextView) itemView.findViewById(R.id.tv_title);
-//            origin_title = (TextView) itemView.findViewById(R.id.tv_origin_title);
-//            genre = (TextView) itemView.findViewById(R.id.tv_genre);
-//            year = (TextView) itemView.findViewById(R.id.tv_year);
-//            rb = (RatingBar) itemView.findViewById(R.id.rb);
-
             imageView = itemView.findViewById(R.id.img_movie);
             textView = itemView.findViewById(R.id.tv_title);
             origin_title = itemView.findViewById(R.id.tv_origin_title);

@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.subtlefalsehood.base.utils.ContextUtils;
+import com.subtlefalsehood.base.utils.JumpUtils;
 import com.training.R;
 
 import butterknife.BindView;
@@ -45,13 +45,13 @@ public class MDTestActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.backup:
-                ContextUtils.showToast(this, "backup");
+                JumpUtils.showToast(this, "backup");
                 break;
             case R.id.delete:
-                ContextUtils.showToast(this, "delete");
+                JumpUtils.showToast(this, "delete");
                 break;
             case R.id.setting:
-                ContextUtils.showToast(this, "setting");
+                JumpUtils.showToast(this, "setting");
                 break;
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);

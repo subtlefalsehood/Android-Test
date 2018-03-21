@@ -15,7 +15,7 @@ import android.widget.Button;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.orhanobut.logger.Logger;
-import com.subtlefalsehood.base.utils.ContextUtils;
+import com.subtlefalsehood.base.utils.JumpUtils;
 import com.training.R;
 import com.training.network.activity.WebActivity;
 
@@ -149,7 +149,7 @@ public class CustomScanActivity extends AppCompatActivity implements DecoratedBa
 
                     @Override
                     public void onAnalyzeFailed() {
-                        ContextUtils.showToast(getApplicationContext(), "QR Code not found");
+                        JumpUtils.showToast(getApplicationContext(), "QR Code not found");
                     }
                 });
             }

@@ -2,19 +2,11 @@ apply plugin: 'com.android.library'
 //这句在基础库中依赖没有用，要在使用的库中引入
 //apply plugin: 'android-apt'
 
-ext{
-    supportLibraryVersion = '25.3.1'
-    loggerVersion = '1.15'
-    butterknifeVersion = '8.8.1'
-    retrofitVerision = '2.3.0'
-}
-
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion 14
         versionCode 1
         versionName "1.0"
     }
@@ -31,27 +23,42 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile "com.android.support:support-v4:$supportLibraryVersion"
-    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
-    compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
-    compile "com.android.support:design:$supportLibraryVersion"
+    //android support库
+    compile "com.android.support:support-v4:25.3.0"
+    compile "com.android.support:appcompat-v7:25.3.0"
+    compile "com.android.support:recyclerview-v7:25.3.0"
+    compile "com.android.support:design:25.3.0"
 
     //Logger
-    compile "com.orhanobut:logger:$loggerVersion"
+    compile "com.orhanobut:logger:1.15"
+
     //butterknife
-    compile "com.jakewharton:butterknife:$butterknifeVersion"
-    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknifeVersion"
+    compile "com.jakewharton:butterknife:8.8.1"
+    annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
     //这句在基础库中依赖没有用，要在使用的库中引入
 //    apt "com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion"
+
     //retrofit2.0
-    compile "com.squareup.retrofit2:retrofit:$retrofitVerision"
-    compile "com.squareup.retrofit2:converter-gson:$retrofitVerision"
-    compile "com.squareup.retrofit2:retrofit-adapters:$retrofitVerision"
-    compile "com.squareup.retrofit2:adapter-rxjava:$retrofitVerision"
+    compile "com.squareup.retrofit2:retrofit:2.3.0"
+    compile "com.squareup.retrofit2:converter-gson:2.3.0"
+    compile "com.squareup.retrofit2:retrofit-adapters:2.3.0"
+    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+
     //eventbus
     compile 'org.greenrobot:eventbus:3.0.0'
+
     //recyclerview适配器
-    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.27'
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.34'
+
+    //谷歌图片库
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+
+    //square picasso图片库
+//    compile 'com.squareup.picasso:picasso:2.5.2'
+
+    //rx
+    compile 'io.reactivex.rxjava2:rxjava:2.1.8'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
 
     testCompile 'junit:junit:4.12'
 }

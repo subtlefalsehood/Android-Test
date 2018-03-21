@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.subtlefalsehood.base.utils.ContextUtils;
+import com.subtlefalsehood.base.utils.JumpUtils;
 import com.training.R;
 import com.training.storage.model.RecipeInfo;
 
@@ -136,7 +136,7 @@ public class FileFragment extends Fragment {
                 fileInputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                ContextUtils.showToast(getActivity(), "文件不存在");
+                JumpUtils.showToast(getActivity(), "文件不存在");
             }
         }
         return text;

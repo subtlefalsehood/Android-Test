@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.subtlefalsehood.base.utils.ContextUtils;
+import com.subtlefalsehood.base.utils.JumpUtils;
 import com.training.R;
 import com.training.storage.model.MyDatabaseOpenHelp;
 import com.training.storage.model.SQLiteInfo;
@@ -59,10 +59,10 @@ public class SQLiteFragment extends Fragment {
             case R.id.btn_insert:
                 String content = editTexts[INSERT].getText().toString();
                 if (content.isEmpty()) {
-                    ContextUtils.showToast(getActivity(), "输入为空");
+                    JumpUtils.showToast(getActivity(), "输入为空");
                 } else {
                     long row = SQLUtils.insertData(openHelp, editTexts[INSERT].getText().toString());
-                    ContextUtils.showToast(getActivity(), "\"" + content + "\"" + "被插入第" + row + "行");
+                    JumpUtils.showToast(getActivity(), "\"" + content + "\"" + "被插入第" + row + "行");
                 }
                 editTexts[INSERT].getText().clear();
                 break;
@@ -70,13 +70,13 @@ public class SQLiteFragment extends Fragment {
                 int count = SQLUtils.deleteData(openHelp, editTexts[DELETE].getText().toString());
                 switch (count) {
                     case -1:
-                        ContextUtils.showToast(getActivity(), "数据库不存在");
+                        JumpUtils.showToast(getActivity(), "数据库不存在");
                         break;
                     case 0:
-                        ContextUtils.showToast(getActivity(), "数据不存在");
+                        JumpUtils.showToast(getActivity(), "数据不存在");
                         break;
                     default:
-                        ContextUtils.showToast(getActivity(),
+                        JumpUtils.showToast(getActivity(),
                                 "\"" + editTexts[DELETE].getText().toString() + "\"" + "已被删除\n"
                                         + "您有" + count + "行数据被删除");
                         break;

@@ -1,40 +1,39 @@
-package com.training.network;
+package com.training.douban;
 
-import com.training.DouBanEvent;
-import com.training.douban.UrlContant;
-import com.training.network.model.data.RpDBM250;
+import com.training.main.model.DoubanMovieBean;
 import com.training.network.request.IDouBanService;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by chenqiuyi on 17/8/17.
  */
 
-public class DouBanModel {
-    private static DouBanModel mInstance;
+public class DoubanNetControler {
+    private static DoubanNetControler mInstance;
     public static int DEFAULT_ONCE_REQUEST_COUNT = 50;
     private static int DEFAULT_TIMEOUT_SECOND = 20;
 
-    public static DouBanModel getInstance() {
+    public static DoubanNetControler getInstance() {
         if (mInstance == null) {
-            mInstance = new DouBanModel();
+            mInstance = new DoubanNetControler();
         }
         return mInstance;
     }
 
-    private DouBanModel() {
+    private DoubanNetControler() {
 
     }
 
@@ -47,25 +46,24 @@ public class DouBanModel {
                         .build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(UrlContant.DOUBAN_BASE_URL)
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
-        Observable<RpDBM250> observable = retrofit.create(IDouBanService.class).getMovies(start, count);
-        observable
-                .subscribeOn(Schedulers.newThread())
+        Observable<DoubanMovieBean> observable = retrofit.create(IDouBanService.class).getMovies(start, count);
+
+        observable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<RpDBM250>() {
+                .subscribe(new Observer<DoubanMovieBean>() {
 
                     @Override
-                    public void onStart() {
-                        super.onStart();
+                    public void onSubscribe(Disposable d) {
                         EventBus.getDefault().post(new DouBanEvent(DouBanEvent.TOP250_MOVIES_START));
                     }
 
                     @Override
-                    public void onCompleted() {
-
+                    public void onNext(DoubanMovieBean doubanMovieBean) {
+                        EventBus.getDefault().post(new DouBanEvent(DouBanEvent.TOP250_MOVIES_SUCCESS, doubanMovieBean));
                     }
 
                     @Override
@@ -74,8 +72,7 @@ public class DouBanModel {
                     }
 
                     @Override
-                    public void onNext(RpDBM250 rpDBM250) {
-                        EventBus.getDefault().post(new DouBanEvent(DouBanEvent.TOP250_MOVIES_SUCCESS, rpDBM250));
+                    public void onComplete() {
                     }
                 });
     }

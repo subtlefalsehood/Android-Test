@@ -168,7 +168,7 @@ public class NotificationMonitor extends NotificationListenerService {
 //        if (appInfos != null) {
 //            if (myNotificationManager.needListen(sbn.getPackageName())) {
 //                myNotificationManager.addMessage(sbn.getPackageName(), (String) notificationText);
-//                ContextUtils.showToast(getApplicationContext(), sbn.getPackageName());
+//                JumpUtils.showToast(getApplicationContext(), sbn.getPackageName());
 //                cancelNotification(sbn.getKey());
 //            }
 //        }

@@ -15,7 +15,7 @@ import android.widget.Toast;
  * Created by chenqiuyi on 16/10/25.
  */
 
-public class ContextUtils {
+public class JumpUtils {
     public static void jumpFragment(FragmentManager fragmentManager, @IdRes int resId, Fragment fragment) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(resId, fragment);
